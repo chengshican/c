@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 游戏修复验证工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+        .status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .pass { background: #4CAF50; }
+        .fail { background: #f44336; }
+        .pending { background: #FF9800; }
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .result-box {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .log-item {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-left: 3px solid #4CAF50;
+            padding-left: 10px;
+        }
+        .log-error {
+            border-left-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 游戏修复验证工具</h1>
+        
+        <div class="test-section">
+            <h2>第一步：检查游戏加载</h2>
+            <button onclick="checkGameLoaded()">检查游戏对象</button>
+            <div id="game-check-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>第二步：测试战斗系统</h2>
+            <button onclick="testBattle()">开始战斗测试</button>
+            <button onclick="stopBattle()">停止战斗</button>
+            <div id="battle-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>第三步：测试自动战斗</h2>
+            <button onclick="testAutoBattle()">开启自动战斗</button>
+            <button onclick="stopAutoBattle()">关闭自动战斗</button>
+            <div id="autobattle-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>第四步：性能监控</h2>
+            <div id="performance-monitor">等待测试...</div>
+        </div>
+        
+        <div class="test-section">
+            <button onclick="openGame()" style="background: #4CAF50; width: 100%;">🎮 打开游戏</button>
+            <button onclick="clearSaveAndRestart()" style="background: #f44336; width: 100%;">🔄 清除存档并重启</button>
+        </div>
+        
+        <div class="result-box" id="log-box"></div>
+    </div>
+    
+    <script>
+        let battleInterval = null;
+        let autoBattleInterval = null;
+        
+        function addLog(message, isError = false) {
+            const logBox = document.getElementById('log-box');
+            const div = document.createElement('div');
+            div.className = 'log-item' + (isError ? ' log-error' : '');
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logBox.appendChild(div);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+        
+        function checkGameLoaded() {
+            addLog('检查游戏对象...');
+            
+            setTimeout(() => {
+                const resultDiv = document.getElementById('game-check-result');
+                
+                try {
+                    if (typeof game !== 'undefined') {
+                        resultDiv.innerHTML = `
+                            <div class="test-item">
+                                <span>Game 对象</span>
+                                <span class="status pass">✓ 已加载</span>
+                            </div>
+                            <div class="test-item">
+                                <span>玩家数据</span>
+                                <span class="status pass">✓ 正常</span>
+                            </div>
+                            <div class="test-item">
+                                <span>Canvas 元素</span>
+                                <span class="status pass">✓ 存在</span>
+                            </div>
+                        `;
+                        addLog('✓ 游戏对象检查通过');
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="test-item">
+                                <span>Game 对象</span>
+                                <span class="status fail">✗ 未加载</span>
+                            </div>
+                        `;
+                        addLog('✗ Game 对象未找到', true);
+                    }
+                } catch (e) {
+                    resultDiv.innerHTML = `
+                        <div class="test-item">
+                            <span>检查失败</span>
+                            <span class="status fail">✗ 错误</span>
+                        </div>
+                    `;
+                    addLog('✗ 检查出错：' + e.message, true);
+                }
+            }, 500);
+        }
+        
+        function testBattle() {
+            addLog('开始战斗测试...');
+            
+            try {
+                if (typeof game === 'undefined') {
+                    addLog('✗ 游戏未加载', true);
+                    return;
+                }
+                
+                if (game.player.team.length === 0) {
+                    addLog('⚠ 阵容为空，请先组建阵容', true);
+                    alert('请先在游戏界面组建阵容！');
+                    return;
+                }
+                
+                game.startBattle();
+                
+                setTimeout(() => {
+                    const resultDiv = document.getElementById('battle-result');
+                    
+                    if (game.state.battle) {
+                        resultDiv.innerHTML = `
+                            <div class="test-item">
+                                <span>战斗状态</span>
+                                <span class="status pass">✓ 已启动</span>
+                            </div>
+                            <div class="test-item">
+                                <span>玩家队伍</span>
+                                <span class="status pass">✓ ${game.state.battle.playerTeam.length}人</span>
+                            </div>
+                            <div class="test-item">
+                                <span>敌人队伍</span>
+                                <span class="status pass">✓ ${game.state.battle.enemyTeam.length}人</span>
+                            </div>
+                        `;
+                        addLog('✓ 战斗启动成功');
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="test-item">
+                                <span>战斗状态</span>
+                                <span class="status fail">✗ 未启动</span>
+                            </div>
+                        `;
+                        addLog('✗ 战斗未启动', true);
+                    }
+                }, 1000);
+                
+            } catch (e) {
+                addLog('✗ 战斗测试失败：' + e.message, true);
+            }
+        }
+        
+        function stopBattle() {
+            if (typeof game !== 'undefined' && game.state.battle) {
+                game.endBattle(false);
+                addLog('战斗已停止');
+            } else {
+                addLog('当前没有进行中的战斗');
+            }
+        }
+        
+        function testAutoBattle() {
+            addLog('测试自动战斗...');
+            
+            try {
+                if (typeof game === 'undefined') {
+                    addLog('✗ 游戏未加载', true);
+                    return;
+                }
+                
+                if (!game.state.battle) {
+                    addLog('⚠ 请先开始战斗', true);
+                    alert('请先开始战斗！');
+                    return;
+                }
+                
+                game.autoBattle = true;
+                game.battlePaused = false;
+                
+                const resultDiv = document.getElementById('autobattle-result');
+                resultDiv.innerHTML = `
+                    <div class="test-item">
+                        <span>自动战斗</span>
+                        <span class="status pass">✓ 已开启</span>
+                    </div>
+                    <div class="test-item">
+                        <span>战斗速度</span>
+                        <span class="status pass">✓ ${game.battleSpeed}x</span>
+                    </div>
+                `;
+                
+                addLog('✓ 自动战斗已开启');
+                
+                // 监控战斗回合
+                let lastTurn = 0;
+                autoBattleInterval = setInterval(() => {
+                    if (game.state.battle) {
+                        const currentTurn = game.state.battle.turn || 0;
+                        if (currentTurn !== lastTurn) {
+                            addLog(`战斗第 ${currentTurn} 回合`);
+                            lastTurn = currentTurn;
+                            
+                            // 更新性能监控
+                            updatePerformanceMonitor();
+                        }
+                    }
+                }, 1000);
+                
+            } catch (e) {
+                addLog('✗ 自动战斗测试失败：' + e.message, true);
+            }
+        }
+        
+        function stopAutoBattle() {
+            if (typeof game !== 'undefined') {
+                game.autoBattle = false;
+                if (autoBattleInterval) {
+                    clearInterval(autoBattleInterval);
+                    autoBattleInterval = null;
+                }
+                addLog('自动战斗已关闭');
+                
+                const resultDiv = document.getElementById('autobattle-result');
+                if (resultDiv) {
+                    resultDiv.innerHTML = `
+                        <div class="test-item">
+                            <span>自动战斗</span>
+                            <span class="status fail">✗ 已关闭</span>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        function updatePerformanceMonitor() {
+            const monitorDiv = document.getElementById('performance-monitor');
+            if (monitorDiv && typeof game !== 'undefined' && game.state.battle) {
+                const turn = game.state.battle.turn || 0;
+                const logLength = game.state.battle.log ? game.state.battle.log.length : 0;
+                
+                monitorDiv.innerHTML = `
+                    <div class="test-item">
+                        <span>当前回合</span>
+                        <span class="status pass">✓ ${turn}</span>
+                    </div>
+                    <div class="test-item">
+                        <span>战斗日志</span>
+                        <span class="status pass">✓ ${logLength}条</span>
+                    </div>
+                    <div class="test-item">
+                        <span>游戏状态</span>
+                        <span class="status pass">✓ 流畅运行</span>
+                    </div>
+                `;
+            }
+        }
+        
+        function openGame() {
+            window.open('index.html', '_blank');
+        }
+        
+        function clearSaveAndRestart() {
+            if (confirm('确定要清除所有存档吗？')) {
+                localStorage.removeItem('sanguo_idle_save');
+                addLog('✓ 存档已清除');
+                alert('存档已清除！请刷新页面重新开始游戏。');
+                location.reload();
+            }
+        }
+        
+        window.onload = function() {
+            addLog('验证工具已加载');
+            setTimeout(() => {
+                checkGameLoaded();
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

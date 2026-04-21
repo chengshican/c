@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 三国英雄传 v4.0 - 完全修复版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            overflow: hidden;
+        }
+        
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        #game-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow-y: auto;
+        }
+        
+        /* 通用样式 */
+        .screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            overflow-y: auto;
+        }
+        
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .player-info {
+            display: flex;
+            gap: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .main-content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+            pointer-events: auto;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .btn-primary { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; }
+        .btn-success { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); color: white; }
+        .btn-info { background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; }
+        .btn-secondary { background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%); color: white; }
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .team-display {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .team-slots {
+            margin: 15px 0;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            pointer-events: auto;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            color: #333;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        .summon-rates {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+        
+        .rate {
+            text-align: center;
+        }
+        
+        .summon-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .summon-result {
+            margin-top: 20px;
+        }
+        
+        .shop-items {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+        
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            pointer-events: auto;
+        }
+        
+        .help-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            z-index: 1000;
+            pointer-events: auto;
+            transition: all 0.3s;
+        }
+        
+        .help-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .current-team, .available-heroes {
+            margin: 20px 0;
+        }
+        
+        .heroes-content {
+            padding: 20px;
+        }
+        
+        .battle-content {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        <div id="ui-layer"></div>
+    </div>
+    
+    <button class="help-btn" onclick="showHelp()">❓</button>
+    
+    <!-- 游戏核心文件 -->
+    <script src="game_v4_complete.js"></script>
+    
+    <script>
+        function showHelp() {
+            if (game) {
+                game.showHelp = function() {
+                    alert(`📖 玩法说明\n\n⚔️ 战斗系统\n点击快速战斗，自动进行回合制战斗\n\n🎴 招募武将\n消耗元宝抽取武将，有 UR/SSR/SR/R 四种稀有度\n\n👥 武将培养\n在武将列表中升级武将，提升属性\n\n🛡️ 阵容搭配\n编辑阵容，最多上阵 5 名武将\n\n🏪 商店\n用金币购买道具\n\n🔄 重新开始\n点击重新开始按钮，清空存档`);
+                };
+                game.showHelp();
+            }
+        }
+    </script>
+</body>
+</html>
