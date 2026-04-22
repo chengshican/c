@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>诊断武将列表问题</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #1a1a2e; color: white; }
+        .section { background: rgba(255,255,255,0.1); padding: 20px; margin: 10px 0; border-radius: 10px; }
+        button { padding: 10px 20px; margin: 5px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        .log { background: #000; padding: 10px; margin: 10px 0; border-radius: 5px; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 400px; overflow-y: auto; }
+        .error { color: #e74c3c; }
+        .success { color: #2ecc71; }
+        .info { color: #3498db; }
+    </style>
+</head>
+<body>
+    <h1>🔍 诊断武将列表无法打开的问题</h1>
+    
+    <div class="section">
+        <h3>步骤 1: 检查 localStorage 数据</h3>
+        <button onclick="checkLocalStorage()">检查数据</button>
+        <button onclick="clearAllData()">清除所有数据</button>
+        <button onclick="createTestData()">创建测试数据</button>
+        <div id="storage-info" class="log">等待检查...</div>
+    </div>
+    
+    <div class="section">
+        <h3>步骤 2: 加载游戏并测试</h3>
+        <button onclick="loadGame()">加载游戏</button>
+        <button onclick="testShowHeroList()">测试 showHeroList</button>
+        <div id="game-info" class="log">等待加载...</div>
+    </div>
+    
+    <div class="section">
+        <h3>步骤 3: 打开游戏主页面</h3>
+        <button onclick="window.open('index_v8.html', '_blank')">打开游戏</button>
+        <p>打开游戏后，登录账号，然后点击"武将列表"按钮，查看浏览器控制台是否有错误。</p>
+    </div>
+
+    <script>
+        function log(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            const color = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            el.innerHTML += `<span class="${color}">${message}</span>\n`;
+        }
+
+        function checkLocalStorage() {
+            const el = document.getElementById('storage-info');
+            el.innerHTML = '';
+            
+            try {
+                const accounts = localStorage.getItem('sanguo_accounts');
+                log('storage-info', `✅ localStorage 可访问\n`, 'success');
+                
+                if (accounts) {
+                    const accList = JSON.parse(accounts);
+                    log('storage-info', `✅ 账号列表存在：${accList.length} 个账号\n`, 'success');
+                    accList.forEach((acc, i) => {
+                        log('storage-info', `   - 账号${i+1}: ${acc.username}\n`, 'info');
+                    });
+                } else {
+                    log('storage-info', `⚠️ 账号列表为空\n`, 'error');
+                }
+                
+                const currentUser = localStorage.getItem('sanguo_current_user');
+                if (currentUser) {
+                    log('storage-info', `\n✅ 当前登录账号：${currentUser}\n`, 'success');
+                    
+                    const playerData = localStorage.getItem('sanguo_idle_' + currentUser);
+                    if (playerData) {
+                        const data = JSON.parse(playerData);
+                        log('storage-info', `✅ 玩家数据存在\n`, 'success');
+                        log('storage-info', `   - 等级：${data.level}\n`, 'info');
+                        log('storage-info', `   - 金币：${data.gold}\n`, 'info');
+                        log('storage-info', `   - 元宝：${data.gem}\n`, 'info');
+                        log('storage-info', `   - 武将数量：${data.heroes ? data.heroes.length : 0}\n`, 'info');
+                        log('storage-info', `   - 装备数量：${data.inventory ? data.inventory.length : 0}\n`, 'info');
+                        
+                        if (data.heroes && data.heroes.length > 0) {
+                            log('storage-info', `\n武将列表:\n`, 'info');
+                            data.heroes.forEach((hero, i) => {
+                                log('storage-info', `   ${i+1}. ${hero.name} (Lv.${hero.level}, 星:${hero.star || 0})\n`, 'info');
+                            });
+                        }
+                    } else {
+                        log('storage-info', `❌ 玩家数据不存在\n`, 'error');
+                    }
+                } else {
+                    log('storage-info', `\n⚠️ 未登录任何账号\n`, 'error');
+                }
+                
+            } catch (e) {
+                log('storage-info', `❌ 错误：${e.message}\n`, 'error');
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('确定要清除所有游戏数据吗？此操作不可恢复！')) {
+                localStorage.removeItem('sanguo_accounts');
+                localStorage.removeItem('sanguo_current_user');
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith('sanguo_idle_')) {
+                        localStorage.removeItem(key);
+                    }
+                }
+                alert('✅ 所有数据已清除！请刷新页面。');
+                location.reload();
+            }
+        }
+
+        function createTestData() {
+            try {
+                // 创建测试账号
+                const accounts = [{
+                    username: 'test',
+                    password: '123456',
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                }];
+                localStorage.setItem('sanguo_accounts', JSON.stringify(accounts));
+                localStorage.setItem('sanguo_current_user', 'test');
+                
+                // 创建测试玩家数据（有武将）
+                const playerData = {
+                    level: 10,
+                    gold: 10000,
+                    gem: 1000,
+                    heroes: [
+                        { id: 'liubei', name: '刘备', level: 50, star: 2, hp: 500, attack: 100, defense: 80, speed: 70 },
+                        { id: 'guanyu', name: '关羽', level: 50, star: 2, hp: 600, attack: 150, defense: 90, speed: 60 },
+                        { id: 'zhangfei', name: '张飞', level: 50, star: 2, hp: 700, attack: 130, defense: 70, speed: 80 }
+                    ],
+                    team: ['liubei', 'guanyu', 'zhangfei'],
+                    inventory: [],
+                    currentLevel: 5,
+                    tutorial: { completed: true }
+                };
+                localStorage.setItem('sanguo_idle_test', JSON.stringify(playerData));
+                
+                log('storage-info', '\n✅ 测试数据创建成功！\n', 'success');
+                log('storage-info', '账号：test\n', 'info');
+                log('storage-info', '密码：123456\n', 'info');
+                log('storage-info', '武将：3 个（刘备、关羽、张飞）\n', 'info');
+                
+            } catch (e) {
+                log('storage-info', `\n❌ 错误：${e.message}\n`, 'error');
+            }
+        }
+
+        function loadGame() {
+            const el = document.getElementById('game-info');
+            el.innerHTML = '';
+            
+            try {
+                // 检查游戏是否已加载
+                if (typeof window.game !== 'undefined') {
+                    log('game-info', '✅ 游戏已加载\n', 'success');
+                    log('game-info', `游戏对象：${JSON.stringify(Object.keys(window.game), null, 2)}\n`, 'info');
+                    
+                    if (typeof window.game.showHeroList === 'function') {
+                        log('game-info', '\n✅ showHeroList 方法存在\n', 'success');
+                    } else {
+                        log('game-info', '\n❌ showHeroList 方法不存在\n', 'error');
+                    }
+                    
+                    if (window.game.player) {
+                        log('game-info', `\n玩家数据:\n`, 'info');
+                        log('game-info', `  - 武将数量：${window.game.player.heroes.length}\n`, 'info');
+                        log('game-info', `  - 当前屏幕：${window.game.state.screen}\n`, 'info');
+                    }
+                } else {
+                    log('game-info', '❌ 游戏未加载，请先打开游戏页面\n', 'error');
+                    log('game-info', '提示：点击"打开游戏"按钮，然后返回此页面刷新\n', 'info');
+                }
+            } catch (e) {
+                log('game-info', `❌ 错误：${e.message}\n`, 'error');
+            }
+        }
+
+        function testShowHeroList() {
+            const el = document.getElementById('game-info');
+            
+            try {
+                if (typeof window.game === 'undefined') {
+                    log('game-info', '\n❌ 游戏未加载\n', 'error');
+                    return;
+                }
+                
+                if (typeof window.game.showHeroList !== 'function') {
+                    log('game-info', '\n❌ showHeroList 方法不存在\n', 'error');
+                    return;
+                }
+                
+                log('game-info', '\n✅ 调用 showHeroList...\n', 'success');
+                
+                // 尝试调用
+                window.game.showHeroList();
+                
+                log('game-info', '✅ 调用成功！请检查游戏页面是否显示武将列表\n', 'success');
+                
+            } catch (e) {
+                log('game-info', `\n❌ 调用失败：${e.message}\n`, 'error');
+                log('game-info', `堆栈：${e.stack}\n`, 'error');
+            }
+        }
+
+        // 自动检查
+        checkLocalStorage();
+    </script>
+</body>
+</html>

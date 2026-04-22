@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 全面功能测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1a2e; color: white; }
+        h1 { color: #f39c12; }
+        h2 { color: #3498db; margin-top: 30px; }
+        .section { background: rgba(255,255,255,0.1); padding: 20px; margin: 15px 0; border-radius: 10px; }
+        .test-item { background: rgba(0,0,0,0.3); padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { padding: 12px 24px; margin: 5px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #2980b9; }
+        button.success { background: #2ecc71; }
+        button.success:hover { background: #27ae60; }
+        button.danger { background: #e74c3c; }
+        button.danger:hover { background: #c0392b; }
+        .log { background: #000; padding: 15px; margin: 10px 0; border-radius: 5px; font-family: monospace; font-size: 13px; white-space: pre-wrap; max-height: 500px; overflow-y: auto; }
+        .pass { color: #2ecc71; font-weight: bold; }
+        .fail { color: #e74c3c; font-weight: bold; }
+        .info { color: #3498db; }
+        .warning { color: #f39c12; }
+        .result { padding: 5px 10px; margin: 3px 0; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 三国英雄传 - 全面功能测试</h1>
+    
+    <div class="section">
+        <h2>📋 测试说明</h2>
+        <p>本测试页面用于检查游戏的所有核心功能是否正常。</p>
+        <p><strong>测试步骤：</strong></p>
+        <ol>
+            <li>点击"创建测试数据"按钮</li>
+            <li>打开游戏页面进行测试</li>
+            <li>逐项测试以下功能</li>
+            <li>查看测试结果</li>
+        </ol>
+    </div>
+    
+    <div class="section">
+        <h2>🛠️ 测试工具</h2>
+        <button onclick="createTestData()">📝 创建测试数据</button>
+        <button class="danger" onclick="clearAllData()">🗑️ 清除所有数据</button>
+        <button onclick="checkData()">🔍 检查数据</button>
+        <div id="data-info" class="log">等待操作...</div>
+    </div>
+    
+    <div class="section">
+        <h2>🎮 功能测试项目</h2>
+        
+        <div class="test-item">
+            <h3>1️⃣ 账号系统</h3>
+            <div class="result" id="test-1">待测试...</div>
+            <button onclick="testAccountSystem()">测试账号登录</button>
+        </div>
+        
+        <div class="test-item">
+            <h3>2️⃣ 武将列表</h3>
+            <div class="result" id="test-2">待测试...</div>
+            <button onclick="testHeroList()">测试武将列表显示</button>
+        </div>
+        
+        <div class="test-item">
+            <h3>3️⃣ 武将升级</h3>
+            <div class="result" id="test-3">待测试...</div>
+            <button onclick="testHeroUpgrade()">测试武将升级</button>
+        </div>
+        
+        <div class="test-item">
+            <h3>4️⃣ 武将升星</h3>
+            <div class="result" id="test-4">待测试...</div>
+            <button onclick="testHeroStarUpgrade()">测试武将升星</button>
+        </div>
+        
+        <div class="test-item">
+            <h3>5️⃣ 装备系统</h3>
+            <div class="result" id="test-5">待测试...</div>
+            <button onclick="testEquipment()">测试装备系统</button>
+        </div>
+        
+        <div class="test-item">
+            <h3>6️⃣ 战斗系统</h3>
+            <div class="result" id="test-6">待测试...</div>
+            <button onclick="testBattle()">测试战斗系统</button>
+        </div>
+        
+        <div class="test-item">
+            <h3>7️⃣ 挂机系统</h3>
+            <div class="result" id="test-7">待测试...</div>
+            <button onclick="testAFK()">测试挂机系统</button>
+        </div>
+        
+        <div class="test-item">
+            <h3>8️⃣ 任务系统</h3>
+            <div class="result" id="test-8">待测试...</div>
+            <button onclick="testQuests()">测试任务系统</button>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>🔗 快速链接</h2>
+        <button class="success" onclick="window.open('index_v8.html', '_blank')">🎮 打开游戏主页面</button>
+        <button onclick="window.open('test_hero_list.html', '_blank')">📋 武将列表专项测试</button>
+        <button onclick="window.open('diagnose_hero_list.html', '_blank')">🔍 诊断工具</button>
+    </div>
+
+    <script>
+        function log(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            const className = type === 'pass' ? 'pass' : type === 'fail' ? 'fail' : type === 'warning' ? 'warning' : 'info';
+            el.innerHTML += `<span class="${className}">${message}</span>\n`;
+        }
+
+        function createTestData() {
+            const el = document.getElementById('data-info');
+            el.innerHTML = '';
+            
+            try {
+                // 创建测试账号
+                const accounts = [
+                    { username: 'test', password: '123456', createdAt: new Date().toISOString(), lastLogin: new Date().toISOString() },
+                    { username: 'god1', password: '123456', createdAt: new Date().toISOString(), lastLogin: new Date().toISOString() }
+                ];
+                localStorage.setItem('sanguo_accounts', JSON.stringify(accounts));
+                localStorage.setItem('sanguo_current_user', 'test');
+                
+                // 创建测试玩家数据
+                const playerData = {
+                    level: 10,
+                    exp: 5000,
+                    gold: 50000,
+                    gem: 5000,
+                    heroes: [
+                        { id: 'liubei', name: '刘备', level: 50, star: 2, hp: 500, attack: 100, defense: 80, speed: 70 },
+                        { id: 'guanyu', name: '关羽', level: 50, star: 2, hp: 600, attack: 150, defense: 90, speed: 60 },
+                        { id: 'zhangfei', name: '张飞', level: 50, star: 2, hp: 700, attack: 130, defense: 70, speed: 80 },
+                        { id: 'zhaoyun', name: '赵云', level: 40, star: 1, hp: 400, attack: 90, defense: 60, speed: 85 },
+                        { id: 'caocao', name: '曹操', level: 45, star: 1, hp: 450, attack: 95, defense: 70, speed: 65 }
+                    ],
+                    team: ['liubei', 'guanyu', 'zhangfei', 'zhaoyun', 'caocao'],
+                    inventory: [
+                        { id: 'w1', name: '铁剑', type: 'weapon', quality: 'white', attack: 10, level: 0 },
+                        { id: 'a1', name: '布甲', type: 'armor', quality: 'white', defense: 8, level: 0 },
+                        { id: 'w2', name: '青铜剑', type: 'weapon', quality: 'green', attack: 20, level: 0 }
+                    ],
+                    currentLevel: 5,
+                    passedLevels: [1, 2, 3, 4],
+                    dailyQuests: {},
+                    stats: { battleWin: 10, summonCount: 5, totalDamage: 50000, afkBattles: 0, afkRewards: 0, afkTime: 0 },
+                    tutorial: { completed: true }
+                };
+                localStorage.setItem('sanguo_idle_test', JSON.stringify(playerData));
+                
+                // 创建超级账号数据
+                const superData = {
+                    level: 100,
+                    exp: 999999999,
+                    gold: 999999999,
+                    gem: 999999999,
+                    heroes: HERO_DATABASE.slice(0, 25).map(h => ({
+                        id: h.id,
+                        name: h.name,
+                        level: 100,
+                        star: 5,
+                        hp: Math.floor(h.hp * 2),
+                        attack: Math.floor(h.attack * 2),
+                        defense: Math.floor(h.defense * 2),
+                        speed: Math.floor(h.speed * 2)
+                    })),
+                    team: HERO_DATABASE.slice(0, 5).map(h => h.id),
+                    inventory: [],
+                    currentLevel: 21,
+                    passedLevels: Array.from({length: 20}, (_, i) => i + 1),
+                    dailyQuests: {},
+                    stats: { battleWin: 1000, summonCount: 100, totalDamage: 999999999, afkBattles: 500, afkRewards: 999999, afkTime: 9999 },
+                    tutorial: { completed: true }
+                };
+                localStorage.setItem('sanguo_idle_god1', JSON.stringify(superData));
+                
+                log('data-info', '✅ 测试数据创建成功！\n', 'pass');
+                log('data-info', '普通账号：test / 123456\n', 'info');
+                log('data-info', '超级账号：god1 / 123456\n', 'info');
+                log('data-info', '\n请刷新游戏页面后登录测试\n', 'warning');
+                
+            } catch (e) {
+                log('data-info', `❌ 错误：${e.message}\n`, 'fail');
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('确定要清除所有游戏数据吗？此操作不可恢复！')) {
+                localStorage.clear();
+                alert('✅ 所有数据已清除！请刷新页面。');
+                location.reload();
+            }
+        }
+
+        function checkData() {
+            const el = document.getElementById('data-info');
+            el.innerHTML = '';
+            
+            try {
+                const accounts = JSON.parse(localStorage.getItem('sanguo_accounts') || '[]');
+                log('data-info', `✅ 账号数量：${accounts.length}\n`, 'pass');
+                
+                const currentUser = localStorage.getItem('sanguo_current_user');
+                if (currentUser) {
+                    log('data-info', `✅ 当前登录账号：${currentUser}\n`, 'pass');
+                    
+                    const playerData = JSON.parse(localStorage.getItem('sanguo_idle_' + currentUser) || '{}');
+                    log('data-info', `✅ 玩家数据:\n`, 'pass');
+                    log('data-info', `   - 等级：${playerData.level}\n`, 'info');
+                    log('data-info', `   - 金币：${playerData.gold}\n`, 'info');
+                    log('data-info', `   - 元宝：${playerData.gem}\n`, 'info');
+                    log('data-info', `   - 武将数量：${playerData.heroes ? playerData.heroes.length : 0}\n`, 'info');
+                    log('data-info', `   - 装备数量：${playerData.inventory ? playerData.inventory.length : 0}\n`, 'info');
+                    log('data-info', `   - 当前关卡：${playerData.currentLevel}\n`, 'info');
+                } else {
+                    log('data-info', `⚠️ 未登录任何账号\n`, 'warning');
+                }
+                
+            } catch (e) {
+                log('data-info', `❌ 错误：${e.message}\n`, 'fail');
+            }
+        }
+
+        function testAccountSystem() {
+            const el = document.getElementById('test-1');
+            try {
+                const accounts = JSON.parse(localStorage.getItem('sanguo_accounts') || '[]');
+                if (accounts.length > 0) {
+                    el.innerHTML = '<span class="pass">✅ 账号系统正常</span>';
+                } else {
+                    el.innerHTML = '<span class="fail">❌ 无账号数据</span>';
+                }
+            } catch (e) {
+                el.innerHTML = `<span class="fail">❌ 错误：${e.message}</span>`;
+            }
+        }
+
+        function testHeroList() {
+            const el = document.getElementById('test-2');
+            try {
+                const currentUser = localStorage.getItem('sanguo_current_user');
+                if (!currentUser) {
+                    el.innerHTML = '<span class="fail">❌ 未登录账号</span>';
+                    return;
+                }
+                
+                const playerData = JSON.parse(localStorage.getItem('sanguo_idle_' + currentUser) || '{}');
+                if (!playerData.heroes || playerData.heroes.length === 0) {
+                    el.innerHTML = '<span class="fail">❌ 无武将数据</span>';
+                    return;
+                }
+                
+                // 检查武将数据完整性
+                let hasIssues = false;
+                playerData.heroes.forEach(hero => {
+                    if (!hero.id || !hero.name) hasIssues = true;
+                });
+                
+                if (hasIssues) {
+                    el.innerHTML = '<span class="fail">❌ 武将数据不完整</span>';
+                } else {
+                    el.innerHTML = '<span class="pass">✅ 武将列表数据正常</span>';
+                }
+            } catch (e) {
+                el.innerHTML = `<span class="fail">❌ 错误：${e.message}</span>`;
+            }
+        }
+
+        function testHeroUpgrade() {
+            const el = document.getElementById('test-3');
+            el.innerHTML = '<span class="info">ℹ️ 请在游戏中测试</span>';
+        }
+
+        function testHeroStarUpgrade() {
+            const el = document.getElementById('test-4');
+            el.innerHTML = '<span class="info">ℹ️ 请在游戏中测试</span>';
+        }
+
+        function testEquipment() {
+            const el = document.getElementById('test-5');
+            try {
+                const currentUser = localStorage.getItem('sanguo_current_user');
+                if (!currentUser) {
+                    el.innerHTML = '<span class="fail">❌ 未登录账号</span>';
+                    return;
+                }
+                
+                const playerData = JSON.parse(localStorage.getItem('sanguo_idle_' + currentUser) || '{}');
+                if (!playerData.inventory || playerData.inventory.length === 0) {
+                    el.innerHTML = '<span class="warning">⚠️ 无装备数据（不影响功能）</span>';
+                } else {
+                    el.innerHTML = '<span class="pass">✅ 装备系统数据正常</span>';
+                }
+            } catch (e) {
+                el.innerHTML = `<span class="fail">❌ 错误：${e.message}</span>`;
+            }
+        }
+
+        function testBattle() {
+            const el = document.getElementById('test-6');
+            el.innerHTML = '<span class="info">ℹ️ 请在游戏中测试</span>';
+        }
+
+        function testAFK() {
+            const el = document.getElementById('test-7');
+            el.innerHTML = '<span class="info">ℹ️ 请在游戏中测试</span>';
+        }
+
+        function testQuests() {
+            const el = document.getElementById('test-8');
+            el.innerHTML = '<span class="info">ℹ️ 请在游戏中测试</span>';
+        }
+
+        // 初始化检查
+        checkData();
+    </script>
+</body>
+</html>

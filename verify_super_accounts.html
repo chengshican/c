@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 验证超级账号数据</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .account-card {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        .account-card h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .data-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .data-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .data-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #667eea;
+            color: white;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 超级账号数据验证工具</h1>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <button class="btn" onclick="checkAllSuperAccounts()">🔍 检查所有超级账号</button>
+            <button class="btn" onclick="recreateAllSuperAccounts()">🔄 重新创建所有超级账号</button>
+            <button class="btn" onclick="clearAllSuperAccounts()">🗑️ 清空所有超级账号</button>
+        </div>
+        
+        <div id="status"></div>
+        <div id="accounts"></div>
+    </div>
+    
+    <script>
+        // 检查所有超级账号
+        function checkAllSuperAccounts() {
+            const superAccounts = ['god1', 'god2', 'god3'];
+            const results = [];
+            
+            superAccounts.forEach(username => {
+                const saveData = localStorage.getItem('sanguo_idle_' + username);
+                const accounts = JSON.parse(localStorage.getItem('sanguo_accounts') || '[]');
+                const accountExists = accounts.find(a => a.username === username);
+                
+                if (!saveData) {
+                    results.push({
+                        username: username,
+                        exists: false,
+                        message: '❌ 超级账号数据不存在'
+                    });
+                    return;
+                }
+                
+                try {
+                    const data = JSON.parse(saveData);
+                    results.push({
+                        username: username,
+                        exists: true,
+                        accountExists: !!accountExists,
+                        data: data,
+                        message: '✅ 数据正常'
+                    });
+                } catch (e) {
+                    results.push({
+                        username: username,
+                        exists: false,
+                        message: '❌ 数据格式错误：' + e.message
+                    });
+                }
+            });
+            
+            displayResults(results);
+        }
+        
+        // 显示结果
+        function displayResults(results) {
+            const statusDiv = document.getElementById('status');
+            const accountsDiv = document.getElementById('accounts');
+            
+            const allGood = results.every(r => r.exists && r.accountExists);
+            
+            if (allGood) {
+                statusDiv.innerHTML = '<div class="status success">✅ 所有超级账号数据正常！</div>';
+            } else {
+                statusDiv.innerHTML = '<div class="status error">⚠️ 发现异常，请查看下方详情</div>';
+            }
+            
+            let html = '<h2>超级账号详情</h2>';
+            
+            results.forEach(result => {
+                if (!result.exists) {
+                    html += `
+                        <div class="account-card" style="border-left-color: #dc3545;">
+                            <h3 style="color: #dc3545;">👑 ${result.username}</h3>
+                            <p>${result.message}</p>
+                            <button class="btn" onclick="recreateSuperAccount('${result.username}')" style="background: #dc3545;">🔄 重新创建此账号</button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const data = result.data;
+                html += `
+                    <div class="account-card">
+                        <h3>👑 ${result.username}</h3>
+                        <p><strong>账号状态：</strong>${result.accountExists ? '✅ 已注册' : '⚠️ 未注册'}</p>
+                        <p><strong>数据状态：</strong>${result.message}</p>
+                        
+                        <div class="data-grid">
+                            <div class="data-item">
+                                <div class="data-label">💰 金币</div>
+                                <div class="data-value">${formatNumber(data.gold)}</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">💎 元宝</div>
+                                <div class="data-value">${formatNumber(data.gem)}</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">🎖️ 等级</div>
+                                <div class="data-value">${data.level}</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">⚔️ 武将数量</div>
+                                <div class="data-value">${data.heroes ? data.heroes.length : 0}</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">🛡️ 装备数量</div>
+                                <div class="data-value">${data.inventory ? data.inventory.length : 0}</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">🏆 通关关卡</div>
+                                <div class="data-value">${data.currentLevel - 1}/20</div>
+                            </div>
+                        </div>
+                        
+                        ${data.heroes && data.heroes.length > 0 ? `
+                            <h4 style="margin-top: 20px;">最强武将（前 5 个）</h4>
+                            <table>
+                                <tr>
+                                    <th>姓名</th>
+                                    <th>稀有度</th>
+                                    <th>等级</th>
+                                    <th>星级</th>
+                                    <th>血量</th>
+                                    <th>攻击</th>
+                                </tr>
+                                ${data.heroes.slice(0, 5).map(hero => `
+                                    <tr>
+                                        <td>${hero.name}</td>
+                                        <td>${hero.rarity}</td>
+                                        <td>${hero.level}</td>
+                                        <td>${hero.star}</td>
+                                        <td>${formatNumber(Math.floor(hero.hp))}</td>
+                                        <td>${formatNumber(Math.floor(hero.attack))}</td>
+                                    </tr>
+                                `).join('')}
+                            </table>
+                        ` : '<div class="warning">⚠️ 没有武将数据</div>'}
+                        
+                        ${data.inventory && data.inventory.length > 0 ? `
+                            <h4 style="margin-top: 20px;">装备统计</h4>
+                            <div class="data-grid">
+                                <div class="data-item">
+                                    <div class="data-label">🔴 红色装备</div>
+                                    <div class="data-value">${data.inventory.filter(e => e.quality === 'red').length}</div>
+                                </div>
+                                <div class="data-item">
+                                    <div class="data-label">🟠 橙色装备</div>
+                                    <div class="data-value">${data.inventory.filter(e => e.quality === 'orange').length}</div>
+                                </div>
+                                <div class="data-item">
+                                    <div class="data-label">🟣 紫色装备</div>
+                                    <div class="data-value">${data.inventory.filter(e => e.quality === 'purple').length}</div>
+                                </div>
+                                <div class="data-item">
+                                    <div class="data-label">🔵 蓝色装备</div>
+                                    <div class="data-value">${data.inventory.filter(e => e.quality === 'blue').length}</div>
+                                </div>
+                            </div>
+                        ` : '<div class="warning">⚠️ 没有装备数据</div>'}
+                        
+                        <button class="btn" onclick="loginAs('${result.username}')" style="margin-top: 15px;">🚀 登录此账号</button>
+                        <button class="btn" onclick="recreateSuperAccount('${result.username}')" style="background: #ffc107; color: #333; margin-top: 15px;">🔄 重新创建</button>
+                    </div>
+                `;
+            });
+            
+            accountsDiv.innerHTML = html;
+        }
+        
+        // 格式化数字
+        function formatNumber(num) {
+            if (num >= 100000000) return (num / 100000000).toFixed(1) + '亿';
+            if (num >= 10000) return (num / 10000).toFixed(1) + '万';
+            return num.toString();
+        }
+        
+        // 重新创建单个账号
+        function recreateSuperAccount(username) {
+            const password = '123456';
+            
+            // 创建账户
+            const accounts = JSON.parse(localStorage.getItem('sanguo_accounts') || '[]');
+            const existingAccount = accounts.find(a => a.username === username);
+            
+            if (!existingAccount) {
+                const newAccount = {
+                    username: username,
+                    password: password,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                };
+                accounts.push(newAccount);
+            } else {
+                existingAccount.password = password;
+                existingAccount.lastLogin = new Date().toISOString();
+            }
+            
+            localStorage.setItem('sanguo_accounts', JSON.stringify(accounts));
+            
+            // 创建超级数据
+            const superData = getSuperPlayerData();
+            localStorage.setItem('sanguo_idle_' + username, JSON.stringify(superData));
+            
+            alert(`✅ 超级账号 ${username} 已重新创建！\n密码：${password}`);
+            checkAllSuperAccounts();
+        }
+        
+        // 重新创建所有账号
+        function recreateAllSuperAccounts() {
+            const superAccounts = [
+                { username: 'god1', password: '123456' },
+                { username: 'god2', password: '123456' },
+                { username: 'god3', password: '123456' }
+            ];
+            
+            const accounts = JSON.parse(localStorage.getItem('sanguo_accounts') || '[]');
+            
+            superAccounts.forEach(({ username, password }) => {
+                let existingAccount = accounts.find(a => a.username === username);
+                
+                if (!existingAccount) {
+                    const newAccount = {
+                        username: username,
+                        password: password,
+                        createdAt: new Date().toISOString(),
+                        lastLogin: new Date().toISOString()
+                    };
+                    accounts.push(newAccount);
+                } else {
+                    existingAccount.password = password;
+                    existingAccount.lastLogin = new Date().toISOString();
+                }
+            });
+            
+            localStorage.setItem('sanguo_accounts', JSON.stringify(accounts));
+            
+            // 创建超级数据
+            const superData = getSuperPlayerData();
+            superAccounts.forEach(({ username }) => {
+                localStorage.setItem('sanguo_idle_' + username, JSON.stringify(superData));
+            });
+            
+            alert('✅ 所有超级账号已重新创建！\n密码均为：123456');
+            checkAllSuperAccounts();
+        }
+        
+        // 清空所有超级账号
+        function clearAllSuperAccounts() {
+            if (!confirm('⚠️ 确定要清空所有超级账号吗？\n此操作不可恢复！')) return;
+            
+            const superAccounts = ['god1', 'god2', 'god3'];
+            const accounts = JSON.parse(localStorage.getItem('sanguo_accounts') || '[]');
+            
+            // 移除超级账号
+            const filteredAccounts = accounts.filter(a => !superAccounts.includes(a.username));
+            localStorage.setItem('sanguo_accounts', JSON.stringify(filteredAccounts));
+            
+            // 移除超级账号数据
+            superAccounts.forEach(username => {
+                localStorage.removeItem('sanguo_idle_' + username);
+            });
+            
+            alert('✅ 所有超级账号已清空！');
+            checkAllSuperAccounts();
+        }
+        
+        // 登录
+        function loginAs(username) {
+            localStorage.setItem('sanguo_current', username);
+            window.location.href = 'index_v8.html';
+        }
+        
+        // 获取超级玩家数据
+        function getSuperPlayerData() {
+            const heroData = [
+                { id: 'liubei', name: '刘备', rarity: 'UR', faction: '蜀', hp: 380, attack: 75, defense: 65, speed: 52 },
+                { id: 'guanyu', name: '关羽', rarity: 'UR', faction: '蜀', hp: 450, attack: 110, defense: 70, speed: 50 },
+                { id: 'zhangfei', name: '张飞', rarity: 'UR', faction: '蜀', hp: 500, attack: 95, defense: 60, speed: 55 },
+                { id: 'zhugeliang', name: '诸葛亮', rarity: 'UR', faction: '蜀', hp: 280, attack: 90, defense: 50, speed: 70 },
+                { id: 'caocao', name: '曹操', rarity: 'UR', faction: '魏', hp: 400, attack: 85, defense: 65, speed: 60 },
+                { id: 'simayi', name: '司马懿', rarity: 'UR', faction: '魏', hp: 350, attack: 95, defense: 55, speed: 65 },
+                { id: 'sunquan', name: '孙权', rarity: 'UR', faction: '吴', hp: 370, attack: 75, defense: 60, speed: 58 },
+                { id: 'zhouyu', name: '周瑜', rarity: 'UR', faction: '吴', hp: 300, attack: 92, defense: 50, speed: 68 },
+                { id: 'lvbu', name: '吕布', rarity: 'UR', faction: '群', hp: 520, attack: 120, defense: 65, speed: 58 },
+                { id: 'zhaoyun', name: '赵云', rarity: 'SSR', faction: '蜀', hp: 350, attack: 85, defense: 55, speed: 75 }
+            ];
+            
+            const starBonus = 2.0;
+            
+            const superHeroes = heroData.map(hero => ({
+                ...hero,
+                level: 100,
+                star: 5,
+                currentHp: hero.hp * starBonus * 2,
+                hp: hero.hp * starBonus,
+                attack: hero.attack * starBonus,
+                defense: hero.defense * starBonus,
+                speed: hero.speed * starBonus,
+                equipment: {
+                    weapon: { id: 'w6', name: '青龙偃月刀', type: 'weapon', quality: 'red', attack: 120, level: 10 },
+                    armor: { id: 'a6', name: '凤凰羽衣', type: 'armor', quality: 'red', defense: 100, level: 10 },
+                    helmet: { id: 'h6', name: '龙头盔', type: 'helmet', quality: 'red', hp: 240, level: 10 },
+                    boots: { id: 'b6', name: '神行靴', type: 'boots', quality: 'red', speed: 60, level: 10 }
+                }
+            }));
+            
+            const allEquipment = [
+                { id: 'w6', name: '青龙偃月刀', type: 'weapon', quality: 'red', attack: 120, level: 10 },
+                { id: 'a6', name: '凤凰羽衣', type: 'armor', quality: 'red', defense: 100, level: 10 },
+                { id: 'h6', name: '龙头盔', type: 'helmet', quality: 'red', hp: 240, level: 10 },
+                { id: 'b6', name: '神行靴', type: 'boots', quality: 'red', speed: 60, level: 10 },
+                { id: 'w5', name: '霸者之剑', type: 'weapon', quality: 'orange', attack: 80, level: 10 },
+                { id: 'a5', name: '战甲', type: 'armor', quality: 'orange', defense: 70, level: 10 },
+                { id: 'h5', name: '虎头盔', type: 'helmet', quality: 'orange', hp: 160, level: 10 },
+                { id: 'b5', name: '疾风靴', type: 'boots', quality: 'orange', speed: 40, level: 10 }
+            ];
+            
+            return {
+                level: 100,
+                exp: 999999999,
+                gold: 999999999,
+                gem: 999999999,
+                heroes: superHeroes,
+                team: superHeroes.slice(0, 5).map(h => h.id),
+                passedLevels: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                currentLevel: 21,
+                dailyQuests: {
+                    1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10, 7: 5,
+                    '1_claimed': true, '2_claimed': true, '3_claimed': true,
+                    '4_claimed': true, '5_claimed': true, '6_claimed': true, '7_claimed': true
+                },
+                stats: { 
+                    battleWin: 9999, 
+                    summonCount: 9999, 
+                    totalDamage: 999999999,
+                    afkBattles: 9999,
+                    afkRewards: 999999999,
+                    afkTime: 99999
+                },
+                inventory: allEquipment,
+                tutorial: {
+                    step: 6,
+                    completed: true
+                }
+            };
+        }
+        
+        // 页面加载时自动检查
+        window.onload = checkAllSuperAccounts;
+    </script>
+</body>
+</html>

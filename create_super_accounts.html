@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👑 创建超级账户</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #f39c12, #d35400);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .features {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .features h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        .features ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        .features li {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .account-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .account-form h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #f39c12;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #f39c12, #d35400);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .message {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        .quick-create {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .quick-create button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            margin: 5px;
+            width: auto;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👑 创建超级账户</h1>
+        <p class="subtitle">一键创建拥有无限资源和最强武将的超级账户</p>
+        
+        <div class="features">
+            <h3>⚡ 超级账户特权：</h3>
+            <ul>
+                <li>💰 无限金币和元宝（9.9 亿）</li>
+                <li>🎖️ 玩家等级 100 级</li>
+                <li>⚔️ 所有 UR/SSR 武将（满级满星）</li>
+                <li>🛡️ 全套红色装备（强化 +10）</li>
+                <li>🏆 已通过所有关卡</li>
+                <li>📚 已完成新手引导</li>
+            </ul>
+        </div>
+        
+        <div class="account-form">
+            <h3>📝 手动创建账户</h3>
+            <div class="form-group">
+                <label>用户名（3-12 位）：</label>
+                <input type="text" id="username" placeholder="输入用户名">
+            </div>
+            <div class="form-group">
+                <label>密码（6 位以上）：</label>
+                <input type="password" id="password" placeholder="输入密码">
+            </div>
+            <div class="form-group">
+                <label>确认密码：</label>
+                <input type="password" id="confirm" placeholder="再次输入密码">
+            </div>
+            <button class="btn" onclick="createSuperAccount()">👑 创建超级账户</button>
+            <div id="message"></div>
+        </div>
+        
+        <div class="quick-create">
+            <h3 style="margin-bottom: 15px;">⚡ 快速创建预设账户</h3>
+            <button class="btn" style="background: linear-gradient(135deg, #e74c3c, #c0392b);" onclick="quickCreate('god1', '123456')">🎮 创建 god1 账户</button>
+            <button class="btn" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);" onclick="quickCreate('god2', '123456')">🎮 创建 god2 账户</button>
+            <button class="btn" style="background: linear-gradient(135deg, #1abc9c, #16a085);" onclick="quickCreate('god3', '123456')">🎮 创建 god3 账户</button>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="index_v8.html" style="color: #3498db; text-decoration: none; font-size: 18px;">→ 返回游戏登录</a>
+        </div>
+    </div>
+    
+    <script>
+        function createSuperAccount(username, password) {
+            if (!username) {
+                username = document.getElementById('username').value.trim();
+                password = document.getElementById('password').value.trim();
+                const confirm = document.getElementById('confirm').value.trim();
+                
+                if (!username || !password) {
+                    showMessage('❌ 用户名和密码不能为空', 'error');
+                    return;
+                }
+                
+                if (username.length < 3 || username.length > 12) {
+                    showMessage('❌ 用户名长度应为 3-12 位', 'error');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showMessage('❌ 密码长度至少 6 位', 'error');
+                    return;
+                }
+                
+                if (password !== confirm) {
+                    showMessage('❌ 两次输入的密码不一致', 'error');
+                    return;
+                }
+            }
+            
+            try {
+                // 创建账户
+                const accounts = JSON.parse(localStorage.getItem('sanguo_accounts') || '[]');
+                const existingAccount = accounts.find(a => a.username === username);
+                
+                if (!existingAccount) {
+                    const newAccount = {
+                        username: username,
+                        password: password,
+                        createdAt: new Date().toISOString(),
+                        lastLogin: new Date().toISOString()
+                    };
+                    
+                    accounts.push(newAccount);
+                    localStorage.setItem('sanguo_accounts', JSON.stringify(accounts));
+                } else {
+                    // 账号已存在，更新密码
+                    existingAccount.password = password;
+                    existingAccount.lastLogin = new Date().toISOString();
+                    localStorage.setItem('sanguo_accounts', JSON.stringify(accounts));
+                }
+                
+                // 创建超级玩家数据（覆盖旧数据）
+                const superData = getSuperPlayerData();
+                localStorage.setItem('sanguo_idle_' + username, JSON.stringify(superData));
+                
+                console.log(`✅ 超级账户 ${username} 创建/更新成功`);
+                console.log(`  - 金币：${superData.gold}`);
+                console.log(`  - 元宝：${superData.gem}`);
+                console.log(`  - 武将数量：${superData.heroes.length}`);
+                console.log(`  - 装备数量：${superData.inventory.length}`);
+                
+                // 设置为当前账户
+                localStorage.setItem('sanguo_current', username);
+                
+                showMessage(`✅ 超级账户 ${username} 创建成功！3 秒后跳转到游戏...`, 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'index_v8.html';
+                }, 3000);
+                
+            } catch (e) {
+                showMessage('❌ 创建失败：' + e.message, 'error');
+                console.error(e);
+            }
+        }
+        
+        function quickCreate(username, password) {
+            createSuperAccount(username, password);
+        }
+        
+        function showMessage(text, type) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = text;
+            msgDiv.className = 'message ' + type;
+        }
+        
+        function getSuperPlayerData() {
+            // 完整的武将数据（UR 和 SSR）
+            const heroData = [
+                { id: 'liubei', name: '刘备', rarity: 'UR', faction: '蜀', hp: 380, attack: 75, defense: 65, speed: 52 },
+                { id: 'guanyu', name: '关羽', rarity: 'UR', faction: '蜀', hp: 450, attack: 110, defense: 70, speed: 50 },
+                { id: 'zhangfei', name: '张飞', rarity: 'UR', faction: '蜀', hp: 500, attack: 95, defense: 60, speed: 55 },
+                { id: 'zhugeliang', name: '诸葛亮', rarity: 'UR', faction: '蜀', hp: 280, attack: 90, defense: 50, speed: 70 },
+                { id: 'caocao', name: '曹操', rarity: 'UR', faction: '魏', hp: 400, attack: 85, defense: 65, speed: 60 },
+                { id: 'simayi', name: '司马懿', rarity: 'UR', faction: '魏', hp: 350, attack: 95, defense: 55, speed: 65 },
+                { id: 'sunquan', name: '孙权', rarity: 'UR', faction: '吴', hp: 370, attack: 75, defense: 60, speed: 58 },
+                { id: 'zhouyu', name: '周瑜', rarity: 'UR', faction: '吴', hp: 300, attack: 92, defense: 50, speed: 68 },
+                { id: 'lvbu', name: '吕布', rarity: 'UR', faction: '群', hp: 520, attack: 120, defense: 65, speed: 58 },
+                { id: 'zhaoyun', name: '赵云', rarity: 'SSR', faction: '蜀', hp: 350, attack: 85, defense: 55, speed: 75 },
+                { id: 'machao', name: '马超', rarity: 'SSR', faction: '蜀', hp: 340, attack: 90, defense: 50, speed: 78 },
+                { id: 'huangzhong', name: '黄忠', rarity: 'SSR', faction: '蜀', hp: 320, attack: 95, defense: 45, speed: 60 },
+                { id: 'weyan', name: '魏延', rarity: 'SSR', faction: '蜀', hp: 360, attack: 88, defense: 52, speed: 58 },
+                { id: 'jiangwei', name: '姜维', rarity: 'SSR', faction: '蜀', hp: 330, attack: 82, defense: 55, speed: 65 },
+                { id: 'xiahoudun', name: '夏侯惇', rarity: 'SSR', faction: '魏', hp: 420, attack: 80, defense: 60, speed: 50 },
+                { id: 'caoren', name: '曹仁', rarity: 'SSR', faction: '魏', hp: 450, attack: 70, defense: 80, speed: 45 },
+                { id: 'guojia', name: '郭嘉', rarity: 'SSR', faction: '魏', hp: 250, attack: 85, defense: 40, speed: 60 },
+                { id: 'dianwei', name: '典韦', rarity: 'SSR', faction: '魏', hp: 480, attack: 90, defense: 55, speed: 48 },
+                { id: 'xuchu', name: '许褚', rarity: 'SSR', faction: '魏', hp: 500, attack: 85, defense: 58, speed: 45 },
+                { id: 'zhangliao', name: '张辽', rarity: 'SSR', faction: '魏', hp: 360, attack: 82, defense: 55, speed: 68 },
+                { id: 'luxun', name: '陆逊', rarity: 'SSR', faction: '吴', hp: 310, attack: 85, defense: 52, speed: 65 },
+                { id: 'lumeng', name: '吕蒙', rarity: 'SSR', faction: '吴', hp: 340, attack: 78, defense: 58, speed: 60 },
+                { id: 'ganning', name: '甘宁', rarity: 'SSR', faction: '吴', hp: 350, attack: 88, defense: 50, speed: 70 },
+                { id: 'taishici', name: '太史慈', rarity: 'SSR', faction: '吴', hp: 380, attack: 82, defense: 55, speed: 62 },
+                { id: 'dongzhuo', name: '董卓', rarity: 'SSR', faction: '群', hp: 550, attack: 85, defense: 70, speed: 40 }
+            ];
+            
+            const starBonus = 2.0; // 5 星加成
+            
+            // 创建所有 UR 和 SSR 武将（满级满星）
+            const superHeroes = heroData.map(hero => ({
+                ...hero,
+                level: 100,
+                star: 5,
+                currentHp: hero.hp * starBonus * 2,
+                hp: hero.hp * starBonus,
+                attack: hero.attack * starBonus,
+                defense: hero.defense * starBonus,
+                speed: hero.speed * starBonus,
+                equipment: {
+                    weapon: { id: 'w6', name: '青龙偃月刀', type: 'weapon', quality: 'red', attack: 120, level: 10 },
+                    armor: { id: 'a6', name: '凤凰羽衣', type: 'armor', quality: 'red', defense: 100, level: 10 },
+                    helmet: { id: 'h6', name: '龙头盔', type: 'helmet', quality: 'red', hp: 240, level: 10 },
+                    boots: { id: 'b6', name: '神行靴', type: 'boots', quality: 'red', speed: 60, level: 10 }
+                }
+            }));
+            
+            // 所有装备（使用固定数据，不依赖外部数据库）
+            const allEquipment = [
+                // 红色装备（+10）
+                { id: 'w6', name: '青龙偃月刀', type: 'weapon', quality: 'red', attack: 120, level: 10 },
+                { id: 'a6', name: '凤凰羽衣', type: 'armor', quality: 'red', defense: 100, level: 10 },
+                { id: 'h6', name: '龙头盔', type: 'helmet', quality: 'red', hp: 240, level: 10 },
+                { id: 'b6', name: '神行靴', type: 'boots', quality: 'red', speed: 60, level: 10 },
+                // 橙色装备（+10）
+                { id: 'w5', name: '霸者之剑', type: 'weapon', quality: 'orange', attack: 80, level: 10 },
+                { id: 'a5', name: '战甲', type: 'armor', quality: 'orange', defense: 70, level: 10 },
+                { id: 'h5', name: '虎头盔', type: 'helmet', quality: 'orange', hp: 160, level: 10 },
+                { id: 'b5', name: '疾风靴', type: 'boots', quality: 'orange', speed: 40, level: 10 },
+                // 紫色装备（+10）
+                { id: 'w4', name: '紫电剑', type: 'weapon', quality: 'purple', attack: 55, level: 10 },
+                { id: 'a4', name: '紫铠', type: 'armor', quality: 'purple', defense: 48, level: 10 },
+                { id: 'h4', name: '紫盔', type: 'helmet', quality: 'purple', hp: 110, level: 10 },
+                { id: 'b4', name: '紫云靴', type: 'boots', quality: 'purple', speed: 28, level: 10 },
+                // 蓝色装备（+10）
+                { id: 'w3', name: '钢剑', type: 'weapon', quality: 'blue', attack: 35, level: 10 },
+                { id: 'a3', name: '铁甲', type: 'armor', quality: 'blue', defense: 30, level: 10 },
+                { id: 'h3', name: '钢盔', type: 'helmet', quality: 'blue', hp: 70, level: 10 },
+                { id: 'b3', name: '铁靴', type: 'boots', quality: 'blue', speed: 18, level: 10 },
+                // 绿色装备（+10）
+                { id: 'w2', name: '青铜剑', type: 'weapon', quality: 'green', attack: 20, level: 10 },
+                { id: 'a2', name: '皮甲', type: 'armor', quality: 'green', defense: 18, level: 10 },
+                { id: 'h2', name: '铁盔', type: 'helmet', quality: 'green', hp: 40, level: 10 },
+                { id: 'b2', name: '皮靴', type: 'boots', quality: 'green', speed: 10, level: 10 },
+                // 白色装备（+10）
+                { id: 'w1', name: '铁剑', type: 'weapon', quality: 'white', attack: 10, level: 10 },
+                { id: 'a1', name: '布甲', type: 'armor', quality: 'white', defense: 8, level: 10 },
+                { id: 'h1', name: '布帽', type: 'helmet', quality: 'white', hp: 20, level: 10 },
+                { id: 'b1', name: '布鞋', type: 'boots', quality: 'white', speed: 5, level: 10 }
+            ];
+            
+            return {
+                level: 100,
+                exp: 999999999,
+                gold: 999999999,
+                gem: 999999999,
+                heroes: superHeroes,
+                team: superHeroes.slice(0, 5).map(h => h.id),
+                passedLevels: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                currentLevel: 21,
+                dailyQuests: {
+                    1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10, 7: 5,
+                    '1_claimed': true, '2_claimed': true, '3_claimed': true,
+                    '4_claimed': true, '5_claimed': true, '6_claimed': true, '7_claimed': true
+                },
+                stats: { 
+                    battleWin: 9999, 
+                    summonCount: 9999, 
+                    totalDamage: 999999999,
+                    afkBattles: 9999,
+                    afkRewards: 999999999,
+                    afkTime: 99999
+                },
+                inventory: allEquipment,
+                tutorial: {
+                    step: 6,
+                    completed: true
+                }
+            };
+        }
+    </script>
+</body>
+</html>

@@ -438,6 +438,137 @@ class AccountManager {
         return { success: true, message: `✅ 欢迎回来，${username}！` };
     }
     
+    // 创建超级账户
+    createSuperAccount(username, password) {
+        const accounts = this.getAllAccounts();
+        const existingAccount = accounts.find(a => a.username === username);
+        
+        // 如果账号不存在，创建新账号
+        if (!existingAccount) {
+            const newAccount = {
+                username: username,
+                password: password,
+                createdAt: new Date().toISOString(),
+                lastLogin: new Date().toISOString()
+            };
+            
+            accounts.push(newAccount);
+            localStorage.setItem(this.ACCOUNT_LIST_KEY, JSON.stringify(accounts));
+        } else {
+            // 账号已存在，更新密码
+            existingAccount.password = password;
+            existingAccount.lastLogin = new Date().toISOString();
+            localStorage.setItem(this.ACCOUNT_LIST_KEY, JSON.stringify(accounts));
+        }
+        
+        // 创建超级玩家数据（覆盖旧数据）
+        const superData = this.getSuperPlayerData();
+        localStorage.setItem(CONFIG.SAVE_PREFIX + username, JSON.stringify(superData));
+        
+        console.log(`✅ 超级账户 ${username} 创建/更新成功`);
+        console.log(`  - 金币：${superData.gold}`);
+        console.log(`  - 元宝：${superData.gem}`);
+        console.log(`  - 武将数量：${superData.heroes.length}`);
+        console.log(`  - 装备数量：${superData.inventory.length}`);
+        
+        return { 
+            success: true, 
+            message: `✅ 超级账户 ${username} 创建成功！\n拥有无限资源和最强武将！` 
+        };
+    }
+    
+    // 获取超级玩家数据（满级武将 + 无限资源）
+    getSuperPlayerData() {
+        // 创建所有 UR 和 SSR 武将（满级满星）
+        const superHeroes = HERO_DATABASE
+            .filter(h => h.rarity === 'UR' || h.rarity === 'SSR')
+            .map(hero => {
+                // 计算满星满级属性
+                const baseHero = HERO_DATABASE.find(h => h.id === hero.id);
+                const starBonus = 1 + (5 * 0.2); // 5 星加成 2.0 倍
+                
+                return {
+                    ...hero,
+                    level: 100,  // 满级
+                    star: 5,     // 5 星满星
+                    currentHp: baseHero.hp * starBonus * 2,  // 满星加成
+                    hp: baseHero.hp * starBonus,
+                    attack: baseHero.attack * starBonus,
+                    defense: baseHero.defense * starBonus,
+                    speed: baseHero.speed * starBonus,
+                    equipment: {
+                        weapon: { id: 'w6', name: '青龙偃月刀', type: 'weapon', quality: 'red', attack: 120, level: 10 },
+                        armor: { id: 'a6', name: '凤凰羽衣', type: 'armor', quality: 'red', defense: 100, level: 10 },
+                        helmet: { id: 'h6', name: '龙头盔', type: 'helmet', quality: 'red', hp: 240, level: 10 },
+                        boots: { id: 'b6', name: '神行靴', type: 'boots', quality: 'red', speed: 60, level: 10 }
+                    }
+                };
+            });
+        
+        // 所有装备（使用固定数据，不依赖 EQUIPMENT_DATABASE）
+        const allEquipment = [
+            // 红色装备（+10）
+            { id: 'w6', name: '青龙偃月刀', type: 'weapon', quality: 'red', attack: 120, level: 10 },
+            { id: 'a6', name: '凤凰羽衣', type: 'armor', quality: 'red', defense: 100, level: 10 },
+            { id: 'h6', name: '龙头盔', type: 'helmet', quality: 'red', hp: 240, level: 10 },
+            { id: 'b6', name: '神行靴', type: 'boots', quality: 'red', speed: 60, level: 10 },
+            // 橙色装备（+10）
+            { id: 'w5', name: '霸者之剑', type: 'weapon', quality: 'orange', attack: 80, level: 10 },
+            { id: 'a5', name: '战甲', type: 'armor', quality: 'orange', defense: 70, level: 10 },
+            { id: 'h5', name: '虎头盔', type: 'helmet', quality: 'orange', hp: 160, level: 10 },
+            { id: 'b5', name: '疾风靴', type: 'boots', quality: 'orange', speed: 40, level: 10 },
+            // 紫色装备（+10）
+            { id: 'w4', name: '紫电剑', type: 'weapon', quality: 'purple', attack: 55, level: 10 },
+            { id: 'a4', name: '紫铠', type: 'armor', quality: 'purple', defense: 48, level: 10 },
+            { id: 'h4', name: '紫盔', type: 'helmet', quality: 'purple', hp: 110, level: 10 },
+            { id: 'b4', name: '紫云靴', type: 'boots', quality: 'purple', speed: 28, level: 10 },
+            // 蓝色装备（+10）
+            { id: 'w3', name: '钢剑', type: 'weapon', quality: 'blue', attack: 35, level: 10 },
+            { id: 'a3', name: '铁甲', type: 'armor', quality: 'blue', defense: 30, level: 10 },
+            { id: 'h3', name: '钢盔', type: 'helmet', quality: 'blue', hp: 70, level: 10 },
+            { id: 'b3', name: '铁靴', type: 'boots', quality: 'blue', speed: 18, level: 10 },
+            // 绿色装备（+10）
+            { id: 'w2', name: '青铜剑', type: 'weapon', quality: 'green', attack: 20, level: 10 },
+            { id: 'a2', name: '皮甲', type: 'armor', quality: 'green', defense: 18, level: 10 },
+            { id: 'h2', name: '铁盔', type: 'helmet', quality: 'green', hp: 40, level: 10 },
+            { id: 'b2', name: '皮靴', type: 'boots', quality: 'green', speed: 10, level: 10 },
+            // 白色装备（+10）
+            { id: 'w1', name: '铁剑', type: 'weapon', quality: 'white', attack: 10, level: 10 },
+            { id: 'a1', name: '布甲', type: 'armor', quality: 'white', defense: 8, level: 10 },
+            { id: 'h1', name: '布帽', type: 'helmet', quality: 'white', hp: 20, level: 10 },
+            { id: 'b1', name: '布鞋', type: 'boots', quality: 'white', speed: 5, level: 10 }
+        ];
+        
+        return {
+            level: 100,  // 玩家满级
+            exp: 999999999,
+            gold: 999999999,  // 无限金币
+            gem: 999999999,   // 无限元宝
+            heroes: superHeroes,
+            team: superHeroes.slice(0, 5).map(h => h.id),  // 前 5 个武将上阵
+            passedLevels: LEVELS.map(l => l.id),  // 已通过所有关卡
+            currentLevel: 21,  // 第 21 关
+            dailyQuests: {
+                1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10, 7: 5,
+                '1_claimed': true, '2_claimed': true, '3_claimed': true,
+                '4_claimed': true, '5_claimed': true, '6_claimed': true, '7_claimed': true
+            },
+            stats: { 
+                battleWin: 9999, 
+                summonCount: 9999, 
+                totalDamage: 999999999,
+                afkBattles: 9999,
+                afkRewards: 999999999,
+                afkTime: 99999
+            },
+            inventory: allEquipment,
+            tutorial: {
+                step: 6,
+                completed: true
+            }
+        };
+    }
+    
     logout() {
         localStorage.removeItem(this.CURRENT_ACCOUNT_KEY);
     }
@@ -476,8 +607,19 @@ class AccountManager {
             passedLevels: [],
             currentLevel: 1,
             dailyQuests: {},
-            stats: { battleWin: 0, summonCount: 0, totalDamage: 0 },
-            inventory: []
+            stats: { 
+                battleWin: 0, 
+                summonCount: 0, 
+                totalDamage: 0,
+                afkBattles: 0,  // 挂机战斗次数
+                afkRewards: 0,  // 挂机获得总奖励
+                afkTime: 0      // 挂机总时长（分钟）
+            },
+            inventory: [],
+            tutorial: {
+                step: 0,  // 0=未开始，1=欢迎，2=招募教学，3=升级教学，4=升星教学，5=装备教学，6=完成
+                completed: false
+            }
         };
     }
 }
@@ -500,6 +642,15 @@ class Game {
         this.battleTimer = null;
         this.battleRunning = false;
         this.autoBattle = false;  // 挂机开关
+        this.clickCooldown = false;  // 点击冷却标志
+        this.lastClickTime = {};  // 记录每个操作的最后点击时间
+        this.battleSpeed = 1;  // 战斗速度（1=正常，2=2 倍速）
+        
+        // 音效系统
+        this.audioEnabled = true;
+        this.bgmAudio = null;
+        this.sfxAudio = {};
+        
         setTimeout(() => this.init(), 100);
     }
     
@@ -515,6 +666,7 @@ class Game {
         
         this.ctx = this.canvas.getContext('2d');
         this.resize();
+        this.initAudio(); // 初始化音效
         this.checkLoginStatus();
         console.log('✅ 游戏初始化成功！');
     }
@@ -533,6 +685,190 @@ class Game {
         return num.toString();
     }
     
+    // ========== 音效系统 ==========
+    initAudio() {
+        try {
+            // 创建 BGM 音频
+            this.bgmAudio = new Audio();
+            this.bgmAudio.loop = true;
+            this.bgmAudio.volume = 0.3;
+            
+            // 预加载音效
+            this.loadSFX();
+            
+            console.log('✅ 音效系统初始化成功');
+        } catch (e) {
+            console.log('⚠️ 音效系统初始化失败（可能浏览器不支持）', e);
+            this.audioEnabled = false;
+        }
+    }
+    
+    loadSFX() {
+        // 使用 Web Audio API 生成简单音效（无需外部文件）
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // 按钮点击音效
+        this.sfxAudio.click = () => {
+            if (!this.audioEnabled) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.frequency.value = 800;
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        };
+        
+        // 升级音效
+        this.sfxAudio.upgrade = () => {
+            if (!this.audioEnabled) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        };
+        
+        // 升星音效
+        this.sfxAudio.starUpgrade = () => {
+            if (!this.audioEnabled) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.type = 'triangle';
+            oscillator.frequency.setValueAtTime(500, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.5);
+            gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        };
+        
+        // 战斗攻击音效
+        this.sfxAudio.attack = () => {
+            if (!this.audioEnabled) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+        };
+        
+        // 技能音效
+        this.sfxAudio.skill = () => {
+            if (!this.audioEnabled) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 0.4);
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.4);
+        };
+        
+        // 胜利音效
+        this.sfxAudio.victory = () => {
+            if (!this.audioEnabled) return;
+            const notes = [523.25, 659.25, 783.99, 1046.50];
+            notes.forEach((freq, i) => {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    oscillator.frequency.value = freq;
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                }, i * 150);
+            });
+        };
+        
+        // 失败音效
+        this.sfxAudio.defeat = () => {
+            if (!this.audioEnabled) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.5);
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        };
+        
+        // 获得物品音效
+        this.sfxAudio.getItem = () => {
+            if (!this.audioEnabled) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+        };
+    }
+    
+    playSFX(sfxName) {
+        if (this.audioEnabled && this.sfxAudio[sfxName]) {
+            this.sfxAudio[sfxName]();
+        }
+    }
+    
+    toggleAudio() {
+        this.audioEnabled = !this.audioEnabled;
+        if (this.audioEnabled) {
+            this.initAudio();
+            alert('🔊 音效已开启');
+        } else {
+            if (this.bgmAudio) {
+                this.bgmAudio.pause();
+            }
+            alert('🔇 音效已关闭');
+        }
+    }
+    
+    // 防抖检查：防止快速点击导致重复响应
+    canPerformAction(actionName, cooldownMs = 500) {
+        const now = Date.now();
+        const lastTime = this.lastClickTime[actionName] || 0;
+        
+        if (now - lastTime < cooldownMs) {
+            console.log(`⏱️ 操作冷却中：${actionName} (${now - lastTime}ms / ${cooldownMs}ms)`);
+            return false;
+        }
+        
+        this.lastClickTime[actionName] = now;
+        return true;
+    }
+    
     checkLoginStatus() {
         const currentUser = accountManager.getCurrentAccount();
         if (currentUser) {
@@ -542,6 +878,11 @@ class Game {
             this.setupHomeUI();
             this.updateResourceDisplay();
             this.renderDailyQuests();
+            
+            // 检查是否需要新手引导
+            if (!this.player.tutorial || !this.player.tutorial.completed) {
+                this.startTutorial();
+            }
         } else {
             this.showScreen('login');
             this.renderLoginScreen();
@@ -566,10 +907,22 @@ class Game {
                         <button class="btn btn-success" onclick="game.showRegister()" style="width: 100%; padding: 15px; font-size: 18px; background: #2ecc71; color: white; border: none; border-radius: 8px; margin-top: 10px; cursor: pointer;">📝 注册新账号</button>
                         
                         <div id="login-message" style="margin-top: 15px; font-weight: bold;"></div>
+                        
+                        <!-- 隐藏的超级账户入口：控制台输入 game.showSuperAccountCreator() -->
                     </div>
                 </div>
             </div>
         `;
+        
+        // 添加隐藏的键盘快捷键（按 Ctrl+Shift+S 显示超级账户创建界面）
+        setTimeout(() => {
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'S') {
+                    e.preventDefault();
+                    if (game) game.showSuperAccountCreator();
+                }
+            });
+        }, 100);
     }
     
     showRegister() {
@@ -594,6 +947,85 @@ class Game {
                 </div>
             </div>
         `;
+    }
+    
+    // 显示超级账户创建界面
+    showSuperAccountCreator() {
+        this.ui.innerHTML = `
+            <div id="super-account-screen" class="screen active">
+                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #f39c12, #d35400);">
+                    <div style="background: white; color: #333; padding: 40px; border-radius: 20px; max-width: 500px; width: 90%; text-align: center;">
+                        <h2 style="margin-bottom: 20px; color: #e74c3c;">👑 创建超级账户</h2>
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: left; font-size: 14px;">
+                            <strong>⚡ 超级账户特权：</strong>
+                            <ul style="margin: 10px 0; padding-left: 20px;">
+                                <li>💰 无限金币和元宝（9.9 亿）</li>
+                                <li>🎖️ 玩家等级 100 级</li>
+                                <li>⚔️ 所有 UR/SSR 武将（满级满星）</li>
+                                <li>🛡️ 全套红色装备（强化 +10）</li>
+                                <li>🏆 已通过所有关卡</li>
+                            </ul>
+                        </div>
+                        
+                        <input type="text" id="super-username" placeholder="用户名（3-12 位）" 
+                            style="width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #f39c12; border-radius: 8px; font-size: 16px;">
+                        <input type="password" id="super-password" placeholder="密码（6 位以上）" 
+                            style="width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #f39c12; border-radius: 8px; font-size: 16px;">
+                        <input type="password" id="super-confirm" placeholder="确认密码" 
+                            style="width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #f39c12; border-radius: 8px; font-size: 16px;">
+                        
+                        <button class="btn btn-warning" onclick="game.createSuperAccount()" style="width: 100%; padding: 15px; font-size: 18px; background: linear-gradient(135deg, #f39c12, #d35400); color: white; border: none; border-radius: 8px; margin-top: 20px; cursor: pointer;">👑 立即创建超级账户</button>
+                        <button class="btn btn-secondary" onclick="game.showLogin()" style="width: 100%; padding: 15px; font-size: 18px; background: #95a5a6; color: white; border: none; border-radius: 8px; margin-top: 10px; cursor: pointer;">← 返回登录</button>
+                        
+                        <div id="super-account-message" style="margin-top: 15px; font-weight: bold;"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // 创建超级账户
+    createSuperAccount() {
+        const username = document.getElementById('super-username').value.trim();
+        const password = document.getElementById('super-password').value.trim();
+        const confirmPassword = document.getElementById('super-confirm').value.trim();
+        
+        if (!username || !password) {
+            document.getElementById('super-account-message').textContent = '❌ 用户名和密码不能为空';
+            document.getElementById('super-account-message').style.color = '#e74c3c';
+            return;
+        }
+        
+        if (username.length < 3 || username.length > 12) {
+            document.getElementById('super-account-message').textContent = '❌ 用户名长度应为 3-12 位';
+            document.getElementById('super-account-message').style.color = '#e74c3c';
+            return;
+        }
+        
+        if (password.length < 6) {
+            document.getElementById('super-account-message').textContent = '❌ 密码长度至少 6 位';
+            document.getElementById('super-account-message').style.color = '#e74c3c';
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            document.getElementById('super-account-message').textContent = '❌ 两次输入的密码不一致';
+            document.getElementById('super-account-message').style.color = '#e74c3c';
+            return;
+        }
+        
+        const result = accountManager.createSuperAccount(username, password);
+        
+        document.getElementById('super-account-message').textContent = result.message;
+        document.getElementById('super-account-message').style.color = result.success ? '#27ae60' : '#e74c3c';
+        
+        if (result.success) {
+            // 自动登录
+            setTimeout(() => {
+                accountManager.login(username, password);
+                this.checkLoginStatus();
+            }, 1500);
+        }
     }
     
     showLogin() {
@@ -719,7 +1151,10 @@ class Game {
                         <span class="chapter">📍 第${this.player.currentLevel}关</span>
                         <span class="user" style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 5px;">👤 ${this.currentUser}</span>
                     </div>
-                    <button class="btn btn-sm btn-secondary" onclick="game.showAccountMenu()">👤 账号</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-sm btn-secondary" onclick="game.showSettings()">⚙️ 设置</button>
+                        <button class="btn btn-sm btn-secondary" onclick="game.showAccountMenu()">👤 账号</button>
+                    </div>
                 </div>
                 <div class="main-content">
                     <div class="team-display">
@@ -732,6 +1167,7 @@ class Game {
                         <button class="btn btn-success" onclick="game.showSummon()">🎴 招募武将</button>
                         <button class="btn btn-info" onclick="game.showHeroList()">👥 武将列表</button>
                         <button class="btn btn-warning" onclick="game.showEquipment()">⚔️ 装备</button>
+                        <button class="btn btn-secondary" onclick="game.showAFKStats()" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">📊 挂机统计</button>
                     </div>
                     <div class="daily-quests" style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; margin-top: 20px;">
                         <h3>📋 每日任务（完成送元宝）</h3>
@@ -837,6 +1273,14 @@ class Game {
     
     // ========== 武将升级系统（完整实现）====================
     upgradeHero(heroIndex, autoUpgrade = false) {
+        // 防抖检查：防止快速点击
+        if (!this.canPerformAction('upgradeHero', 500)) {
+            if (!autoUpgrade) {
+                console.log('⚠️ 升级操作过于频繁，请稍后再试');
+            }
+            return;
+        }
+        
         const hero = this.player.heroes[heroIndex];
         if (!hero) return;
         
@@ -851,6 +1295,8 @@ class Game {
             alert(`❌ 金币不足！\n需要 ${cost} 金币\n当前 ${this.player.gold} 金币`);
             return;
         }
+        
+        this.playSFX('click'); // 播放点击音效
         
         const oldStats = {
             hp: hero.hp,
@@ -981,8 +1427,20 @@ class Game {
     
     // ========== 武将升星系统（新增）====================
     upgradeHeroStar(heroIndex) {
+        // 防抖检查：防止快速点击
+        if (!this.canPerformAction('upgradeHeroStar', 1000)) {
+            console.log('⚠️ 升星操作过于频繁，请稍后再试');
+            return;
+        }
+        
         const hero = this.player.heroes[heroIndex];
         if (!hero) return;
+        
+        // 检查武将是否在阵容中
+        if (this.player.team.includes(hero.id)) {
+            alert('⚠️ 该武将正在阵容中，请先下阵后再升星！\n\n💡 提示：在"阵容"界面将该武将从阵容中移除');
+            return;
+        }
         
         // 严格验证星级
         const maxStar = 5;
@@ -1061,6 +1519,8 @@ class Game {
             return;
         }
         
+        this.playSFX('starUpgrade'); // 播放升星音效
+        
         const starBonus = 1 + (hero.star * 0.2); // 1 星 1.2 倍，2 星 1.4 倍，依此类推
         
         // 重新计算属性（基于基础属性 + 等级成长）
@@ -1091,8 +1551,13 @@ class Game {
         }
         
         this.updateResourceDisplay();
-        this.showHeroList();
         this.saveGame(); // 保存游戏
+        
+        // 刷新当前界面（如果在武将列表界面）
+        const currentScreen = document.querySelector('.screen.active');
+        if (currentScreen && currentScreen.id === 'hero-list-screen') {
+            this.showHeroList(); // 刷新武将列表
+        }
         
         alert(
             `⭐ 升星成功！\n\n` +
@@ -1115,18 +1580,30 @@ class Game {
         this.renderEquipmentList();
     }
     
+    // 渲染装备界面（添加强化按钮）
     renderEquipmentList() {
         const listDiv = document.getElementById('equipment-list');
         if (!listDiv) return;
         
+        // 添加强化功能入口
+        let html = `
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <h3>⚔️ 装备管理</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="game.showEnhanceUI()" style="padding: 10px 20px; background: linear-gradient(135deg, #e74c3c, #c0392b);">✨ 装备强化</button>
+                    <button class="btn btn-warning" onclick="game.showBatchSellUI()" style="padding: 10px 20px; background: linear-gradient(135deg, #f39c12, #d35400);">💰 批量出售</button>
+                </div>
+            </div>
+        `;
+        
         // 如果没有武将
         if (this.player.heroes.length === 0) {
-            listDiv.innerHTML = '<div style="text-align: center; padding: 50px; color: #999;">暂无武将，请先招募武将</div>';
+            listDiv.innerHTML = html + '<div style="text-align: center; padding: 50px; color: #999;">暂无武将，请先招募武将</div>';
             return;
         }
         
         // 显示武将选择器
-        let html = `
+        html += `
             <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; margin-bottom: 20px;">
                 <h3>👤 选择武将</h3>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
@@ -1225,6 +1702,12 @@ class Game {
     }
     
     equipItemToHero(index) {
+        // 防抖检查：防止快速点击
+        if (!this.canPerformAction('equipItem', 500)) {
+            console.log('⚠️ 装备操作过于频繁，请稍后再试');
+            return;
+        }
+        
         const item = this.player.inventory[index];
         if (!item) return;
         
@@ -1252,6 +1735,12 @@ class Game {
     }
     
     unequipItem(type) {
+        // 防抖检查：防止快速点击
+        if (!this.canPerformAction('unequipItem', 500)) {
+            console.log('⚠️ 卸下装备操作过于频繁，请稍后再试');
+            return;
+        }
+        
         const selectedHero = this.player.heroes[this.state.selectedHeroForEquip];
         const equipped = selectedHero?.equipment[type];
         if (!equipped) return;
@@ -1262,6 +1751,373 @@ class Game {
         this.updateTeamStats();
         this.renderEquipmentList();
         this.saveGame();
+    }
+    
+    // 批量出售装备
+    sellEquipmentBatch(quality, confirmSell = true) {
+        // 防抖检查
+        if (!this.canPerformAction('sellBatch', 1000)) {
+            console.log('⚠️ 批量操作过于频繁，请稍后再试');
+            return;
+        }
+        
+        // 筛选指定品质的装备（不包括已穿戴的）
+        const wornEquipment = new Set();
+        this.player.heroes.forEach(hero => {
+            Object.values(hero.equipment).forEach(equip => {
+                if (equip) wornEquipment.add(equip.id + (equip.level || ''));
+            });
+        });
+        
+        const sellableItems = [];
+        this.player.inventory.forEach((item, index) => {
+            const itemKey = item.id + (item.level || '');
+            if (item.quality === quality && !wornEquipment.has(itemKey)) {
+                sellableItems.push(index);
+            }
+        });
+        
+        if (sellableItems.length === 0) {
+            alert(`⚠️ 没有可出售的 ${QUALITY_NAMES[quality]} 品质装备`);
+            return;
+        }
+        
+        // 计算出售价格
+        const basePrice = {
+            white: 10,
+            green: 25,
+            blue: 50,
+            purple: 100,
+            orange: 200,
+            red: 500
+        };
+        
+        const totalPrice = sellableItems.length * (basePrice[quality] || 10);
+        
+        if (confirmSell) {
+            const confirm = confirm(
+                `💰 批量出售装备\n\n` +
+                `出售品质：${QUALITY_NAMES[quality]}\n` +
+                `出售数量：${sellableItems.length} 件\n` +
+                `获得金币：${totalPrice}\n\n` +
+                `⚠️ 注意：已穿戴的装备不会被出售\n\n` +
+                `是否确认出售？`
+            );
+            
+            if (!confirm) return;
+        }
+        
+        // 移除装备（从后往前删除）
+        sellableItems.sort((a, b) => b - a);
+        sellableItems.forEach(index => {
+            this.player.inventory.splice(index, 1);
+        });
+        
+        // 添加金币
+        this.player.gold += totalPrice;
+        
+        this.updateResourceDisplay();
+        this.renderEquipmentList();
+        this.saveGame();
+        
+        if (confirmSell) {
+            alert(`✅ 出售成功！\n获得 ${totalPrice} 金币`);
+        }
+        
+        return {
+            count: sellableItems.length,
+            gold: totalPrice
+        };
+    }
+    
+    // 显示批量出售界面
+    showBatchSellUI() {
+        this.showScreen('equipment');
+        
+        setTimeout(() => {
+            const content = document.getElementById('equipment-content');
+            if (!content) return;
+            
+            let html = `
+                <div style="padding: 20px;">
+                    <h3 style="text-align: center; margin-bottom: 20px;">💰 批量出售装备</h3>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h4>📋 出售说明</h4>
+                        <ul style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.8;">
+                            <li>选择要出售的装备品质</li>
+                            <li>该品质的所有未穿戴装备将被出售</li>
+                            <li>已穿戴的装备不会被出售</li>
+                            <li>获得金币返还</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                        ${Object.keys(QUALITY_NAMES).map(quality => `
+                            <button class="btn" onclick="game.sellEquipmentBatch('${quality}')" 
+                                style="background: linear-gradient(135deg, ${QUALITY_COLORS[quality]}, #333); color: white; padding: 20px; border-radius: 10px; font-size: 16px;">
+                                出售${QUALITY_NAMES[quality]}装备
+                            </button>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="btn btn-secondary" onclick="game.showScreen('home')" style="padding: 15px 40px; font-size: 18px;">返回</button>
+                    </div>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+        }, 100);
+    }
+    
+    // 装备强化系统
+    enhanceEquipment(index, materialIndices) {
+        // 防抖检查
+        if (!this.canPerformAction('enhanceEquip', 1000)) {
+            console.log('⚠️ 强化操作过于频繁，请稍后再试');
+            return;
+        }
+        
+        const targetEquip = this.player.inventory[index];
+        if (!targetEquip) {
+            alert('❌ 请选择要强化的装备');
+            return;
+        }
+        
+        // 检查是否有强化材料
+        if (!materialIndices || materialIndices.length === 0) {
+            alert('❌ 请选择强化材料（至少 1 件装备）');
+            return;
+        }
+        
+        // 检查材料装备是否足够
+        if (materialIndices.length > this.player.inventory.length - 1) {
+            alert('❌ 强化材料数量不足');
+            return;
+        }
+        
+        // 计算强化经验（根据材料装备的品质）
+        let enhanceExp = 0;
+        const qualityExp = {
+            white: 10,
+            green: 25,
+            blue: 50,
+            purple: 100,
+            orange: 200,
+            red: 400
+        };
+        
+        materialIndices.forEach(matIndex => {
+            const matEquip = this.player.inventory[matIndex];
+            if (matEquip) {
+                enhanceExp += qualityExp[matEquip.quality] || 10;
+            }
+        });
+        
+        // 显示强化预览
+        const currentLevel = targetEquip.level || 1;
+        const maxLevel = 10;
+        
+        if (currentLevel >= maxLevel) {
+            alert('⚠️ 装备已达满级，无法继续强化');
+            return;
+        }
+        
+        const expNeeded = currentLevel * 100;
+        const confirmEnhance = confirm(
+            `⚔️ 装备强化预览\n\n` +
+            `目标装备：${targetEquip.name} (+${currentLevel})\n` +
+            `强化经验：+${enhanceExp}\n` +
+            `需要经验：${expNeeded}\n` +
+            `消耗材料：${materialIndices.length} 件装备\n\n` +
+            `是否确认强化？`
+        );
+        
+        if (!confirmEnhance) return;
+        
+        // 保存旧属性
+        const oldAttr = this.getEquipAttrValue(targetEquip);
+        
+        // 移除材料装备（从后往前删除，避免索引问题）
+        materialIndices.sort((a, b) => b - a);
+        materialIndices.forEach(matIndex => {
+            this.player.inventory.splice(matIndex, 1);
+        });
+        
+        // 增加强化经验
+        targetEquip.enhanceExp = (targetEquip.enhanceExp || 0) + enhanceExp;
+        targetEquip.level = targetEquip.level || 1;
+        
+        // 检查是否升级
+        while (targetEquip.enhanceExp >= targetEquip.level * 100 && targetEquip.level < maxLevel) {
+            targetEquip.enhanceExp -= targetEquip.level * 100;
+            targetEquip.level++;
+            
+            // 提升属性（每件装备类型提升不同属性）
+            if (targetEquip.attack) targetEquip.attack += Math.floor(targetEquip.attack * 0.1);
+            if (targetEquip.defense) targetEquip.defense += Math.floor(targetEquip.defense * 0.1);
+            if (targetEquip.hp) targetEquip.hp += Math.floor(targetEquip.hp * 0.1);
+            if (targetEquip.speed) targetEquip.speed += Math.floor(targetEquip.speed * 0.1);
+        }
+        
+        const newAttr = this.getEquipAttrValue(targetEquip);
+        
+        this.updateTeamStats();
+        this.renderEquipmentList();
+        this.saveGame();
+        this.updateDailyQuest('equip_upgrade');
+        
+        alert(
+            `✅ 强化成功！\n\n` +
+            `${targetEquip.name} +${currentLevel} → +${targetEquip.level}\n` +
+            `属性：${oldAttr} → ${newAttr}`
+        );
+    }
+    
+    // 显示装备强化界面
+    showEnhanceUI() {
+        if (this.player.inventory.length < 2) {
+            alert('⚠️ 背包中至少需要 2 件装备才能强化');
+            return;
+        }
+        
+        this.showScreen('equipment');
+        
+        setTimeout(() => {
+            const content = document.getElementById('equipment-content');
+            if (!content) return;
+            
+            let html = `
+                <div style="padding: 20px;">
+                    <h3 style="text-align: center; margin-bottom: 20px;">⚔️ 装备强化系统</h3>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h4>📋 强化说明</h4>
+                        <ul style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.8;">
+                            <li>选择 1 件目标装备进行强化</li>
+                            <li>选择其他装备作为强化材料</li>
+                            <li>材料装备会被消耗，转化为强化经验</li>
+                            <li>装备品质越高，提供的经验越多</li>
+                            <li>强化等级上限：+10</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
+                        <h4>🎒 选择装备（点击选择）</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 15px;">
+                            ${this.player.inventory.map((item, index) => `
+                                <div id="enhance-item-${index}" onclick="game.toggleEnhanceSelection(${index})" 
+                                    style="background: linear-gradient(135deg, ${QUALITY_COLORS[item.quality]} 0%, #333 100%); padding: 10px; border-radius: 8px; color: white; cursor: pointer; border: 3px solid transparent; transition: all 0.3s;">
+                                    <div style="font-weight: bold; font-size: 14px;">${item.name}</div>
+                                    <div style="font-size: 11px;">${QUALITY_NAMES[item.quality]}</div>
+                                    <div style="font-size: 12px; margin-top: 5px;">+${this.getEquipAttrValue(item)}</div>
+                                    ${item.level ? `<div style="font-size: 10px; color: #f39c12;">+${item.level}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="btn btn-primary" onclick="game.confirmEnhance()" style="padding: 15px 40px; font-size: 18px;">✨ 开始强化</button>
+                        <button class="btn btn-secondary" onclick="game.showScreen('home')" style="padding: 15px 40px; font-size: 18px; margin-left: 10px;">返回</button>
+                    </div>
+                    
+                    <div id="enhance-selection-info" style="margin-top: 20px; text-align: center; color: #f39c12; font-weight: bold;"></div>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+            
+            // 初始化选择状态
+            this.state.enhanceSelection = {
+                targetIndex: null,
+                materialIndices: []
+            };
+        }, 100);
+    }
+    
+    // 切换强化装备选择
+    toggleEnhanceSelection(index) {
+        const selection = this.state.enhanceSelection;
+        
+        // 如果还没选择目标装备
+        if (selection.targetIndex === null) {
+            selection.targetIndex = index;
+            this.renderEnhanceSelection();
+        } else if (selection.targetIndex === index) {
+            // 取消选择目标装备
+            selection.targetIndex = null;
+            this.renderEnhanceSelection();
+        } else if (selection.materialIndices.includes(index)) {
+            // 取消选择材料装备
+            selection.materialIndices = selection.materialIndices.filter(i => i !== index);
+            this.renderEnhanceSelection();
+        } else {
+            // 添加为材料装备
+            selection.materialIndices.push(index);
+            this.renderEnhanceSelection();
+        }
+    }
+    
+    // 渲染强化选择状态
+    renderEnhanceSelection() {
+        const selection = this.state.enhanceSelection;
+        const infoDiv = document.getElementById('enhance-selection-info');
+        
+        // 清除所有选中状态
+        document.querySelectorAll('[id^="enhance-item-"]').forEach(el => {
+            el.style.borderColor = 'transparent';
+            el.style.boxShadow = 'none';
+        });
+        
+        // 高亮目标装备
+        if (selection.targetIndex !== null) {
+            const targetEl = document.getElementById(`enhance-item-${selection.targetIndex}`);
+            if (targetEl) {
+                targetEl.style.borderColor = '#f39c12';
+                targetEl.style.boxShadow = '0 0 20px rgba(243, 156, 18, 0.6)';
+            }
+        }
+        
+        // 高亮材料装备
+        selection.materialIndices.forEach(index => {
+            const el = document.getElementById(`enhance-item-${index}`);
+            if (el) {
+                el.style.borderColor = '#e74c3c';
+                el.style.boxShadow = '0 0 10px rgba(231, 76, 60, 0.4)';
+            }
+        });
+        
+        // 更新提示信息
+        if (selection.targetIndex !== null) {
+            infoDiv.textContent = `已选择：目标装备 x1 + 材料装备 x${selection.materialIndices.length}`;
+        } else {
+            infoDiv.textContent = '请点击选择要强化的目标装备（第一个点击的装备）';
+        }
+    }
+    
+    // 确认强化
+    confirmEnhance() {
+        const selection = this.state.enhanceSelection;
+        
+        if (selection.targetIndex === null) {
+            alert('❌ 请先选择要强化的目标装备');
+            return;
+        }
+        
+        if (selection.materialIndices.length === 0) {
+            alert('❌ 请至少选择 1 件强化材料');
+            return;
+        }
+        
+        this.enhanceEquipment(selection.targetIndex, selection.materialIndices);
+        
+        // 重置选择
+        this.state.enhanceSelection = {
+            targetIndex: null,
+            materialIndices: []
+        };
     }
     
     equipToHero(heroIndex) {
@@ -1534,6 +2390,8 @@ class Game {
         }
         this.battleRunning = false;
         
+        this.playSFX('victory'); // 播放胜利音效
+        
         const level = this.state.battle.level;
         const reward = level.reward;
         
@@ -1550,7 +2408,24 @@ class Game {
             ];
             const equip = allEquipment.find(e => e.id === reward.equipment);
             if (equip) {
-                this.player.inventory.push({ ...equip });
+                const equipmentData = { ...equip };
+                const beforeCount = this.player.inventory.length;
+                this.player.inventory.push(equipmentData);
+                const afterCount = this.player.inventory.length;
+                
+                console.log(`✅ 装备掉落验证:`);
+                console.log(`  - 装备名称：${equipmentData.name}`);
+                console.log(`  - 装备类型：${equipmentData.type}`);
+                console.log(`  - 装备品质：${equipmentData.quality}`);
+                console.log(`  - 掉落前背包数量：${beforeCount}`);
+                console.log(`  - 掉落后背包数量：${afterCount}`);
+                console.log(`  - 添加成功：${afterCount === beforeCount + 1}`);
+                
+                if (afterCount !== beforeCount + 1) {
+                    console.error('❌ 装备添加失败！');
+                }
+            } else {
+                console.error(`❌ 未找到装备 ID: ${reward.equipment}`);
             }
         }
         
@@ -1561,6 +2436,13 @@ class Game {
         
         this.updateDailyQuest('battle_win');
         this.player.stats.battleWin = (this.player.stats.battleWin || 0) + 1;
+        
+        // 挂机统计
+        if (this.autoBattle) {
+            this.player.stats.afkBattles = (this.player.stats.afkBattles || 0) + 1;
+            this.player.stats.afkRewards = (this.player.stats.afkRewards || 0) + reward.gold + reward.exp;
+        }
+        
         this.saveGame();
         
         // 先清理战斗状态并返回主页
@@ -1570,11 +2452,27 @@ class Game {
         this.updateResourceDisplay();
         this.renderDailyQuests();
         
+        // 如果获得了装备，刷新背包界面
+        if (reward.equipment) {
+            this.renderEquipmentList();
+        }
+        
         // 延迟显示奖励信息，避免在战斗界面弹窗
         setTimeout(() => {
             let rewardText = `🎉 战斗胜利！\n📜 关卡：${level.name}\n💰 金币 +${reward.gold}\n✨ 经验 +${reward.exp}`;
             if (reward.gem > 0) rewardText += `\n💎 元宝 +${reward.gem}`;
-            if (reward.equipment) rewardText += `\n⚔️ 装备 +1`;
+            if (reward.equipment) {
+                const allEquipment = [
+                    ...EQUIPMENT_DATABASE.weapon,
+                    ...EQUIPMENT_DATABASE.armor,
+                    ...EQUIPMENT_DATABASE.helmet,
+                    ...EQUIPMENT_DATABASE.boots
+                ];
+                const equip = allEquipment.find(e => e.id === reward.equipment);
+                if (equip) {
+                    rewardText += `\n⚔️ 装备：${equip.name}（${QUALITY_NAMES[equip.quality]}）x1`;
+                }
+            }
             alert(rewardText);
             
             // 如果挂机模式开启，自动挑战下一关
@@ -1633,7 +2531,7 @@ class Game {
         }
         this.battleRunning = false;
         
-        // 逃跑时重置挂机状态
+        // 逃跑或失败时完全退出挂机模式
         if (this.autoBattle) {
             this.autoBattle = false;
             const btn = document.getElementById('auto-battle-btn');
@@ -1641,6 +2539,7 @@ class Game {
                 btn.textContent = '🤖 挂机：关';
                 btn.style.background = '#2ecc71';
             }
+            console.log('⏸️ 退出战斗，已关闭挂机模式');
         }
         
         if (isRun) alert('🏃 逃跑成功！');
@@ -1690,7 +2589,8 @@ class Game {
                 </div>
                 <div style="margin-top: 30px; text-align: center;">
                     <button class="btn btn-danger" onclick="game.endBattle(true)" style="box-shadow: 0 5px 15px rgba(231,76,60,0.4); transition: all 0.3s; transform: scale(1);">🏃 逃跑</button>
-                    <button class="btn btn-success" onclick="game.toggleAutoBattle()" id="auto-battle-btn" style="box-shadow: 0 5px 15px rgba(46,204,113,0.4); transition: all 0.3s; margin-left: 10px; transform: scale(1);">🤖 挂机：关</button>
+                    <button class="btn btn-success" onclick="game.toggleAutoBattle()" id="auto-battle-btn" style="box-shadow: 0 5px 15px rgba(46,204,113,0.4); transition: all 0.3s; margin-left: 10px; transform: scale(1);">🤖 挂机：${this.autoBattle ? '开' : '关'}</button>
+                    <button class="btn btn-info" onclick="game.toggleBattleSpeed()" id="battle-speed-btn" style="box-shadow: 0 5px 15px rgba(52,152,219,0.4); transition: all 0.3s; margin-left: 10px; transform: scale(1);">⚡ ${this.battleSpeed}x 速</button>
                 </div>
             </div>
         `;
@@ -1798,6 +2698,26 @@ class Game {
         }
     }
     
+    // 切换战斗速度
+    toggleBattleSpeed() {
+        this.battleSpeed = this.battleSpeed === 1 ? 2 : 1;
+        this.playSFX('click');
+        
+        const btn = document.getElementById('battle-speed-btn');
+        if (btn) {
+            btn.textContent = `⚡ ${this.battleSpeed}x 速`;
+        }
+        
+        // 调整战斗速度
+        if (this.battleTimer) {
+            clearInterval(this.battleTimer);
+            const interval = this.battleSpeed === 2 ? 800 : 1500;  // 2 倍速 800ms，正常 1500ms
+            this.battleTimer = setInterval(() => this.battleLoop(), interval);
+        }
+        
+        this.showNotification(`⚡ 战斗速度：${this.battleSpeed}x`, 'info', 2000);
+    }
+    
     showNotification(message, type = 'info', duration = 3000) {
         // 移除旧的通知
         const oldNotification = document.getElementById('game-notification');
@@ -1833,14 +2753,39 @@ class Game {
     }
     
     summon(count) {
+        // 防抖检查：防止快速点击
+        if (!this.canPerformAction('summon', 1000)) {
+            console.log('⚠️ 招募操作过于频繁，请稍后再试');
+            return;
+        }
+        
         const cost = count * 100;
         if (this.player.gem < cost) {
             alert(`❌ 元宝不足！需要 ${cost} 元宝`);
             return;
         }
         
+        // 检查武将数量，如果过多则提示
+        const maxHeroes = 50; // 设置最大武将数量
+        if (this.player.heroes.length + count > maxHeroes) {
+            const confirmSummon = confirm(
+                `⚠️ 武将数量过多！\n\n` +
+                `当前武将数量：${this.player.heroes.length}\n` +
+                `本次招募数量：${count}\n` +
+                `招募后总数：${this.player.heroes.length + count}\n` +
+                `建议最大数量：${maxHeroes}\n\n` +
+                `💡 提示：可以通过升星消耗重复武将\n\n` +
+                `是否继续招募？`
+            );
+            if (!confirmSummon) return;
+        }
+        
         this.player.gem -= cost;
         const results = [];
+        
+        console.log(`🎴 开始招募 ${count} 名武将`);
+        console.log(`  - 消耗元宝：${cost}`);
+        console.log(`  - 招募前武将数量：${this.player.heroes.length}`);
         
         for (let i = 0; i < count; i++) {
             const rand = Math.random() * 100;
@@ -1920,6 +2865,7 @@ class Game {
     }
     
     showHeroList() {
+        console.log('📋 打开武将列表，武将数量:', this.player.heroes.length);
         this.showScreen('heroes');
         const countDisplay = document.getElementById('hero-count');
         const content = document.getElementById('heroes-content');
@@ -1934,27 +2880,45 @@ class Game {
         content.innerHTML = `
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px;">
                 ${this.player.heroes.map((hero, index) => {
-                    const template = HERO_DATABASE.find(h => h.id === hero.id) || hero;
-                    const rarity = RARITY[template.rarity];
-                    const factionColor = FACTION_COLORS[template.faction] || '#999';
+                    const template = HERO_DATABASE.find(h => h.id === hero.id);
+                    // 确保有完整的数据
+                    const name = hero.name || (template ? template.name : '未知武将');
+                    const rarityKey = template ? template.rarity : 'R';
+                    const rarity = RARITY[rarityKey] || RARITY.R;
+                    const faction = template ? template.faction : '群';
+                    const factionColor = FACTION_COLORS[faction] || '#999';
+                    const icon = template ? template.icon : '⭐';
+                    const title = template ? template.title : '';
                     const level = hero.level || 1;
+                    const star = hero.star || 0;
+                    
+                    // 计算属性（考虑等级和星级加成）
+                    const baseHp = template ? template.hp : 200;
+                    const baseAttack = template ? template.attack : 50;
+                    const baseDefense = template ? template.defense : 30;
+                    const baseSpeed = template ? template.speed : 30;
+                    
+                    const hp = hero.hp || Math.floor(baseHp * (1 + (level - 1) * 0.1) * (1 + star * 0.2));
+                    const attack = hero.attack || Math.floor(baseAttack * (1 + (level - 1) * 0.1) * (1 + star * 0.2));
+                    const defense = hero.defense || Math.floor(baseDefense * (1 + (level - 1) * 0.1) * (1 + star * 0.2));
+                    const speed = hero.speed || Math.floor(baseSpeed * (1 + (level - 1) * 0.1) * (1 + star * 0.2));
                     
                     return `
-                        <div style="background: linear-gradient(135deg, ${rarity ? rarity.color : '#999'} 0%, #333 100%); padding: 20px; border-radius: 15px; position: relative;">
-                            <div style="position: absolute; top: 10px; right: 10px; background: ${factionColor}; padding: 3px 8px; border-radius: 5px; font-size: 12px;">${template.faction}</div>
+                        <div style="background: linear-gradient(135deg, ${rarity.color} 0%, #333 100%); padding: 20px; border-radius: 15px; position: relative;">
+                            <div style="position: absolute; top: 10px; right: 10px; background: ${factionColor}; padding: 3px 8px; border-radius: 5px; font-size: 12px;">${faction}</div>
                             ${hero.isDupe ? '<div style="position: absolute; top: 10px; left: 10px; background: #f39c12; padding: 3px 8px; border-radius: 5px; font-size: 12px; color: white;">🔄 重复</div>' : ''}
                             <div style="text-align: center; margin-bottom: 10px;">
-                                <div style="font-size: 48px;">${template.icon || '⭐'}</div>
-                                <div style="font-size: 12px; color: rgba(255,255,255,0.7); font-style: italic;">${template.title || ''}</div>
+                                <div style="font-size: 48px;">${icon}</div>
+                                <div style="font-size: 12px; color: rgba(255,255,255,0.7); font-style: italic;">${title}</div>
                             </div>
-                            <div style="font-size: 24px; margin-bottom: 10px; color: white; text-align: center;">${template.name}</div>
-                            <div style="font-size: 14px; margin-bottom: 10px; color: rgba(255,255,255,0.8); text-align: center;">Lv.${level} ${rarity.name} ${hero.star ? '⭐'.repeat(hero.star) : ''}</div>
+                            <div style="font-size: 24px; margin-bottom: 10px; color: white; text-align: center;">${name}</div>
+                            <div style="font-size: 14px; margin-bottom: 10px; color: rgba(255,255,255,0.8); text-align: center;">Lv.${level} ${rarity.name} ${star > 0 ? '⭐'.repeat(star) : ''}</div>
                             ${hero.isDupe ? '<div style="text-align: center; margin-bottom: 10px; color: #f39c12; font-size: 12px;">⚠️ 此武将可用于升星</div>' : ''}
                             <div style="font-size: 14px; margin-bottom: 5px;">
-                                <div>❤️ HP: ${hero.hp}</div>
-                                <div>⚔️ 攻击：${hero.attack}</div>
-                                <div>🛡️ 防御：${hero.defense}</div>
-                                <div>💨 速度：${hero.speed}</div>
+                                <div>❤️ HP: ${hp}</div>
+                                <div>⚔️ 攻击：${attack}</div>
+                                <div>🛡️ 防御：${defense}</div>
+                                <div>💨 速度：${speed}</div>
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-top: 15px;">
                                 <button class="btn btn-sm" onclick="game.upgradeHero(${index})" style="background: #f39c12; color: white; font-size: 12px;">⬆️ 升级</button>
@@ -1967,6 +2931,7 @@ class Game {
                 }).join('')}
             </div>
         `;
+        console.log('✅ 武将列表渲染完成');
     }
     
     removeHero(index) {
@@ -2086,7 +3051,16 @@ class Game {
         const listDiv = document.getElementById('daily-quest-list');
         if (!listDiv) return;
         
-        listDiv.innerHTML = DAILY_QUESTS.map(quest => {
+        // 添加一键领取按钮
+        let html = `
+            <div style="text-align: right; margin-bottom: 10px;">
+                <button class="btn btn-warning btn-sm" onclick="game.claimAllQuestRewards()" style="background: linear-gradient(135deg, #f39c12, #d35400);">
+                    🎁 一键领取所有奖励
+                </button>
+            </div>
+        `;
+        
+        html += DAILY_QUESTS.map(quest => {
             const progress = (this.player.dailyQuests[quest.id] || 0);
             const completed = progress >= quest.target;
             const claimed = this.player.dailyQuests[quest.id + '_claimed'];
@@ -2104,6 +3078,8 @@ class Game {
                 </div>
             `;
         }).join('');
+        
+        listDiv.innerHTML = html;
     }
     
     updateDailyQuest(type) {
@@ -2131,6 +3107,15 @@ class Game {
         if (!quest) return;
         
         const progress = this.player.dailyQuests[questId] || 0;
+        
+        console.log(`📋 领取奖励验证:`);
+        console.log(`  - 任务 ID: ${questId}`);
+        console.log(`  - 任务名称：${quest.name}`);
+        console.log(`  - 当前进度：${progress}`);
+        console.log(`  - 目标进度：${quest.target}`);
+        console.log(`  - 是否已完成：${progress >= quest.target}`);
+        console.log(`  - 是否已领取：${this.player.dailyQuests[questId + '_claimed']}`);
+        
         if (progress < quest.target) {
             alert('❌ 任务未完成');
             return;
@@ -2140,6 +3125,11 @@ class Game {
             alert('❌ 奖励已领取');
             return;
         }
+        
+        console.log(`✅ 领取每日任务奖励：${quest.name}`);
+        console.log(`  - 金币 +${quest.reward.gold}`);
+        console.log(`  - 元宝 +${quest.reward.gem}`);
+        console.log(`  - 经验 +${quest.reward.exp}`);
         
         this.player.gold += quest.reward.gold;
         this.player.gem += quest.reward.gem;
@@ -2160,6 +3150,271 @@ class Game {
         this.updateResourceDisplay();
         this.renderDailyQuests();
         // 注意：领取奖励后不会自动开始战斗，需要玩家手动操作
+    }
+    
+    // 一键领取所有任务奖励
+    claimAllQuestRewards() {
+        this.playSFX('getItem');
+        
+        let totalGold = 0;
+        let totalGem = 0;
+        let totalExp = 0;
+        let claimedCount = 0;
+        
+        DAILY_QUESTS.forEach(quest => {
+            const questId = quest.id;
+            const progress = this.player.dailyQuests[questId] || 0;
+            const claimed = this.player.dailyQuests[questId + '_claimed'];
+            
+            if (progress >= quest.target && !claimed) {
+                this.player.gold += quest.reward.gold;
+                this.player.gem += quest.reward.gem;
+                this.player.exp += quest.reward.exp;
+                this.player.dailyQuests[questId + '_claimed'] = true;
+                
+                totalGold += quest.reward.gold;
+                totalGem += quest.reward.gem;
+                totalExp += quest.reward.exp;
+                claimedCount++;
+            }
+        });
+        
+        if (claimedCount === 0) {
+            alert('⚠️ 没有可领取的奖励\n所有任务未完成或已领取');
+            return;
+        }
+        
+        alert(
+            `✅ 一键领取成功！\n\n` +
+            `领取数量：${claimedCount} 个\n` +
+            `💰 金币 +${totalGold}\n` +
+            `💎 元宝 +${totalGem}\n` +
+            `✨ 经验 +${totalExp}`
+        );
+        
+        this.saveGame();
+        this.updateResourceDisplay();
+        this.renderDailyQuests();
+    }
+    
+    // ========== 新手引导系统 ==========
+    startTutorial() {
+        if (!this.player.tutorial) {
+            this.player.tutorial = { step: 0, completed: false };
+        }
+        
+        const step = this.player.tutorial.step;
+        
+        switch(step) {
+            case 0:
+                this.showTutorialWelcome();
+                break;
+            case 1:
+                this.showTutorialSummon();
+                break;
+            case 2:
+                this.showTutorialUpgrade();
+                break;
+            case 3:
+                this.showTutorialStarUpgrade();
+                break;
+            case 4:
+                this.showTutorialEquipment();
+                break;
+            default:
+                this.completeTutorial();
+        }
+    }
+    
+    showTutorialWelcome() {
+        setTimeout(() => {
+            alert(
+                `🎮 欢迎来到《三国英雄传》！\n\n` +
+                `📖 游戏说明：\n` +
+                `• 招募武将，组建你的最强阵容\n` +
+                `• 升级武将，提升战斗力\n` +
+                `• 收集重复武将进行升星\n` +
+                `• 穿戴装备，强化属性\n` +
+                `• 挑战关卡，赢取丰厚奖励\n\n` +
+                `💡 接下来将为你介绍游戏基本玩法`
+            );
+            
+            this.player.tutorial.step = 1;
+            this.saveGame();
+        }, 500);
+    }
+    
+    showTutorialSummon() {
+        setTimeout(() => {
+            alert(
+                `🎴 武将招募系统\n\n` +
+                `点击主界面的"招募武将"按钮\n` +
+                `• 单次招募：100 元宝\n` +
+                `• 十连招募：1000 元宝（推荐）\n\n` +
+                `💡 稀有度概率：\n` +
+                `UR(2%) > SSR(8%) > SR(25%) > R(65%)\n\n` +
+                `重复武将可用于升星！`
+            );
+            
+            this.player.tutorial.step = 2;
+            this.saveGame();
+        }, 500);
+    }
+    
+    showTutorialUpgrade() {
+        setTimeout(() => {
+            alert(
+                `⬆️ 武将升级系统\n\n` +
+                `在武将列表中选择武将，点击"升级"\n` +
+                `• 消耗金币提升等级\n` +
+                `• 等级上限 100 级\n` +
+                `• 每级提升基础属性\n\n` +
+                `💡 提示：可以使用"一键升级"快速升到满级`
+            );
+            
+            this.player.tutorial.step = 3;
+            this.saveGame();
+        }, 500);
+    }
+    
+    showTutorialStarUpgrade() {
+        setTimeout(() => {
+            alert(
+                `⭐ 武将升星系统\n\n` +
+                `收集重复武将后进行升星\n` +
+                `• 0 星→1 星：需要 1 个重复武将\n` +
+                `• 1 星→2 星：需要 2 个重复武将\n` +
+                `• 2 星→3 星：需要 3 个重复武将\n` +
+                `• 依此类推...\n\n` +
+                `💡 升星后全属性提升 20%！\n⚠️ 注意：升星前需要先下阵武将`
+            );
+            
+            this.player.tutorial.step = 4;
+            this.saveGame();
+        }, 500);
+    }
+    
+    showTutorialEquipment() {
+        setTimeout(() => {
+            alert(
+                `⚔️ 装备系统\n\n` +
+                `通过关卡掉落获得装备\n` +
+                `• 武器：增加攻击力\n` +
+                `• 防具：增加防御力\n` +
+                `• 头盔：增加血量\n` +
+                `• 靴子：增加速度\n\n` +
+                `品质：白色 < 绿色 < 蓝色 < 紫色 < 橙色 < 红色`
+            );
+            
+            this.player.tutorial.step = 5;
+            this.saveGame();
+        }, 500);
+    }
+    
+    completeTutorial() {
+        setTimeout(() => {
+            alert(
+                `🎉 恭喜完成新手引导！\n\n` +
+                `你已经了解了游戏的基本玩法\n` +
+                `现在就开始你的三国征程吧！\n\n` +
+                `💡 提示：\n` +
+                `• 每日记得完成任务领取奖励\n` +
+                `• 合理搭配阵容，提升战力\n` +
+                `• 挂机模式可自动挑战关卡\n\n` +
+                `祝你游戏愉快！`
+            );
+            
+            this.player.tutorial.completed = true;
+            this.player.tutorial.step = 6;
+            this.saveGame();
+            
+            console.log('✅ 新手引导完成');
+        }, 500);
+    }
+    
+    // 显示挂机统计
+    showAFKStats() {
+        const stats = this.player.stats;
+        const afkBattles = stats.afkBattles || 0;
+        const afkRewards = stats.afkRewards || 0;
+        const afkTime = stats.afkTime || 0;
+        
+        alert(
+            `📊 挂机统计\n\n` +
+            `🤖 挂机战斗次数：${afkBattles} 次\n` +
+            `💰 挂机获得资源：${afkRewards} (金币 + 经验)\n` +
+            `⏱️ 挂机总时长：${afkTime} 分钟\n\n` +
+            `💡 提示：挂机模式可自动挑战关卡，解放双手！`
+        );
+    }
+    
+    // 切换夜间模式
+    toggleNightMode() {
+        document.body.classList.toggle('night-mode');
+        const isNight = document.body.classList.contains('night-mode');
+        console.log(`🌙 夜间模式已${isNight ? '开启' : '关闭'}`);
+    }
+    
+    // 调节字体大小
+    setFontSize(size) {
+        document.body.classList.remove('font-large', 'font-small');
+        if (size === 'large') {
+            document.body.classList.add('font-large');
+        } else if (size === 'small') {
+            document.body.classList.add('font-small');
+        }
+        console.log(`📝 字体大小已设置为：${size}`);
+    }
+    
+    // 显示设置菜单
+    showSettings() {
+        const confirm = confirm(
+            `⚙️ 游戏设置\n\n` +
+            `1. 夜间模式：切换深色背景\n` +
+            `2. 字体大小：大/中/小\n` +
+            `3. 音效开关：开启/关闭音效\n\n` +
+            `选择操作：\n` +
+            `点击"确定"切换夜间模式\n` +
+            `点击"取消"调整其他设置`
+        );
+        
+        if (confirm) {
+            this.toggleNightMode();
+            alert(`🌙 夜间模式已${document.body.classList.contains('night-mode') ? '开启' : '关闭'}`);
+        } else {
+            const choice = prompt(
+                '请输入选项：\n' +
+                '1. 调整字体大小（large/medium/small）\n' +
+                '2. 切换音效（on/off）',
+                '1'
+            );
+            
+            if (choice === '1' || choice === 'large' || choice === 'medium' || choice === 'small') {
+                const size = choice === '1' ? prompt('请输入字体大小 (large/medium/small):', 'medium') : choice;
+                if (size) {
+                    this.setFontSize(size);
+                    alert(`📝 字体大小已调整`);
+                }
+            } else if (choice === '2' || choice === 'on' || choice === 'off') {
+                if (choice === '2') {
+                    this.toggleAudio();
+                } else {
+                    this.audioEnabled = (choice === 'on');
+                    alert(`🔊 音效已${this.audioEnabled ? '开启' : '关闭'}`);
+                }
+            }
+        }
+    }
+    
+    // 手动重新触发新手引导（用于测试）
+    resetTutorial() {
+        if (this.player.tutorial) {
+            this.player.tutorial.step = 0;
+            this.player.tutorial.completed = false;
+            this.saveGame();
+            this.startTutorial();
+            console.log('🔄 新手引导已重置');
+        }
     }
 }
 

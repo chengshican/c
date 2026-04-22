@@ -6,7 +6,142 @@
     <title>🎮 三国英雄传 v1.0 - 20 关剧情版</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial; background: #1a1a2e; color: white; overflow: hidden; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Microsoft YaHei", sans-serif;
+            background: #1a1a2e; 
+            color: white; 
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        /* 夜间模式 */
+        body.night-mode {
+            background: #0a0a0f;
+        }
+        body.night-mode .header {
+            background: linear-gradient(135deg, #2c3e50, #000000);
+        }
+        body.night-mode .screen {
+            background: rgba(0,0,0,0.3);
+        }
+        body.night-mode .modal-content {
+            background: #1a1a2e;
+            color: #ecf0f1;
+        }
+        
+        /* 字体优化 */
+        body {
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* 字体大小调节 */
+        body.font-large { font-size: 18px; }
+        body.font-small { font-size: 14px; }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            /* 小屏幕优化 */
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+            .player-info {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                font-size: 13px;
+            }
+            .main-content {
+                padding: 10px;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+                margin: 3px;
+            }
+            .btn-sm {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            .quick-actions {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+            }
+            .modal-content {
+                max-width: 95%;
+                padding: 20px;
+            }
+            .daily-quests {
+                padding: 15px;
+            }
+        }
+        
+        /* 超小屏幕（手机竖屏） */
+        @media (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+            .header {
+                padding: 8px;
+            }
+            .player-info {
+                font-size: 12px;
+                gap: 8px;
+            }
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            .btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+            .team-display {
+                padding: 10px;
+            }
+            /* 武将卡片优化 */
+            .hero-card {
+                min-width: 100%;
+            }
+            /* 装备格子优化 */
+            .equipment-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            /* 战斗界面优化 */
+            .battle-team {
+                font-size: 12px;
+            }
+            .battle-unit {
+                padding: 5px;
+            }
+        }
+        
+        /* 触摸优化 */
+        @media (hover: none) and (pointer: coarse) {
+            /* 移除悬停效果，优化触摸体验 */
+            .btn:hover {
+                transform: none;
+            }
+            .btn:active {
+                transform: scale(0.95);
+            }
+            /* 增大触摸目标 */
+            .btn, .back-btn, input, select {
+                min-height: 44px;
+            }
+        }
+        
+        /* 横屏优化 */
+        @media (orientation: landscape) and (max-width: 896px) {
+            .screen {
+                max-height: 100vh;
+            }
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
         #game-container { width: 100vw; height: 100vh; position: relative; }
         #game-canvas { display: block; width: 100%; height: 100%; }
         #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow-y: auto; }
