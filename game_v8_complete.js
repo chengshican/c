@@ -23,9 +23,9 @@ const FACTION_COLORS = {
     '群': '#9b59b6'
 };
 
-// ==================== 30 武将数据库 ====================
+// ==================== 60 武将数据库 ====================
 const HERO_DATABASE = [
-    // 蜀国（12 人）
+    // 蜀国（15 人）
     { id: 'liubei', name: '刘备', rarity: 'UR', faction: '蜀', hp: 380, attack: 75, defense: 65, speed: 52, icon: '👑', title: '仁德之君' },
     { id: 'guanyu', name: '关羽', rarity: 'UR', faction: '蜀', hp: 450, attack: 110, defense: 70, speed: 50, icon: '🐉', title: '武圣' },
     { id: 'zhangfei', name: '张飞', rarity: 'UR', faction: '蜀', hp: 500, attack: 95, defense: 60, speed: 55, icon: '🐍', title: '万人敌' },
@@ -35,10 +35,13 @@ const HERO_DATABASE = [
     { id: 'huangzhong', name: '黄忠', rarity: 'SSR', faction: '蜀', hp: 320, attack: 95, defense: 45, speed: 60, icon: '🏹', title: '神射手' },
     { id: 'weyan', name: '魏延', rarity: 'SSR', faction: '蜀', hp: 360, attack: 88, defense: 52, speed: 58, icon: '⚔️', title: '征西大将军' },
     { id: 'jiangwei', name: '姜维', rarity: 'SSR', faction: '蜀', hp: 330, attack: 82, defense: 55, speed: 65, icon: '🎯', title: '麒麟儿' },
+    { id: 'pangtong', name: '庞统', rarity: 'SSR', faction: '蜀', hp: 270, attack: 88, defense: 45, speed: 62, icon: '🦅', title: '凤雏' },
     { id: 'liao', name: '廖化', rarity: 'SR', faction: '蜀', hp: 220, attack: 50, defense: 40, speed: 35, icon: '🛡️', title: '先锋大将' },
     { id: 'zhaolei', name: '赵累', rarity: 'R', faction: '蜀', hp: 180, attack: 40, defense: 35, speed: 30, icon: '🔰', title: '忠诚副将' },
     { id: 'mangchang', name: '孟获', rarity: 'SR', faction: '蜀', hp: 380, attack: 70, defense: 50, speed: 40, icon: '👹', title: '南蛮王' },
-    // 魏国（10 人）
+    { id: 'zhurong', name: '祝融夫人', rarity: 'SR', faction: '蜀', hp: 290, attack: 68, defense: 42, speed: 55, icon: '🔥', title: '蛮族女王' },
+    { id: 'huatuo', name: '华佗', rarity: 'SR', faction: '蜀', hp: 240, attack: 45, defense: 38, speed: 48, icon: '💊', title: '神医' },
+    // 魏国（18 人）
     { id: 'caocao', name: '曹操', rarity: 'UR', faction: '魏', hp: 400, attack: 85, defense: 65, speed: 60, icon: '🐲', title: '魏武帝' },
     { id: 'simayi', name: '司马懿', rarity: 'UR', faction: '魏', hp: 350, attack: 95, defense: 55, speed: 65, icon: '🦅', title: '冢虎' },
     { id: 'xiahoudun', name: '夏侯惇', rarity: 'SSR', faction: '魏', hp: 420, attack: 80, defense: 60, speed: 50, icon: '👁️', title: '独眼将军' },
@@ -49,16 +52,43 @@ const HERO_DATABASE = [
     { id: 'zhangliao', name: '张辽', rarity: 'SSR', faction: '魏', hp: 360, attack: 82, defense: 55, speed: 68, icon: '🌪️', title: '威震逍遥津' },
     { id: 'xiahoun', name: '夏侯渊', rarity: 'SR', faction: '魏', hp: 320, attack: 78, defense: 45, speed: 72, icon: '🏃', title: '疾行将军' },
     { id: 'caohong', name: '曹洪', rarity: 'SR', faction: '魏', hp: 380, attack: 65, defense: 60, speed: 48, icon: '💂', title: '护国将军' },
-    // 吴国（6 人）
+    { id: 'xunyu', name: '荀彧', rarity: 'SSR', faction: '魏', hp: 260, attack: 80, defense: 42, speed: 58, icon: '📜', title: '王佐之才' },
+    { id: 'xunyou', name: '荀攸', rarity: 'SR', faction: '魏', hp: 240, attack: 72, defense: 40, speed: 55, icon: '🎯', title: '谋主' },
+    { id: 'jiaxu', name: '贾诩', rarity: 'SSR', faction: '魏', hp: 270, attack: 83, defense: 43, speed: 60, icon: '🦊', title: '毒士' },
+    { id: 'chengyu', name: '程昱', rarity: 'SR', faction: '魏', hp: 250, attack: 70, defense: 38, speed: 52, icon: '🔮', title: '谋士' },
+    { id: 'caopi', name: '曹丕', rarity: 'SR', faction: '魏', hp: 310, attack: 68, defense: 52, speed: 50, icon: '📖', title: '魏文帝' },
+    { id: 'caizhen', name: '蔡文姬', rarity: 'SSR', faction: '魏', hp: 230, attack: 65, defense: 35, speed: 55, icon: '🎵', title: '才女' },
+    { id: 'zhanghe', name: '张郃', rarity: 'SR', faction: '魏', hp: 340, attack: 75, defense: 50, speed: 65, icon: '⚔️', title: '巧变将军' },
+    { id: 'xuhuang', name: '徐晃', rarity: 'SR', faction: '魏', hp: 360, attack: 73, defense: 55, speed: 48, icon: '🪓', title: '平寇将军' },
+    // 吴国（15 人）
     { id: 'sunquan', name: '孙权', rarity: 'UR', faction: '吴', hp: 370, attack: 75, defense: 60, speed: 58, icon: '👑', title: '吴大帝' },
     { id: 'zhouyu', name: '周瑜', rarity: 'UR', faction: '吴', hp: 300, attack: 92, defense: 50, speed: 68, icon: '🎵', title: '美周郎' },
+    { id: 'sunce', name: '孙策', rarity: 'UR', faction: '吴', hp: 420, attack: 95, defense: 58, speed: 65, icon: '🐯', title: '小霸王' },
     { id: 'luxun', name: '陆逊', rarity: 'SSR', faction: '吴', hp: 310, attack: 85, defense: 52, speed: 65, icon: '🔥', title: '书生大将' },
     { id: 'lumeng', name: '吕蒙', rarity: 'SSR', faction: '吴', hp: 340, attack: 78, defense: 58, speed: 60, icon: '📚', title: '白衣渡江' },
     { id: 'ganning', name: '甘宁', rarity: 'SSR', faction: '吴', hp: 350, attack: 88, defense: 50, speed: 70, icon: '🔔', title: '锦帆贼' },
     { id: 'taishici', name: '太史慈', rarity: 'SSR', faction: '吴', hp: 380, attack: 82, defense: 55, speed: 62, icon: '🎯', title: '神箭将军' },
-    // 群雄（2 人）
+    { id: 'huanggai', name: '黄盖', rarity: 'SR', faction: '吴', hp: 370, attack: 68, defense: 58, speed: 45, icon: '🔥', title: '苦肉计' },
+    { id: 'zhugejin', name: '诸葛瑾', rarity: 'SR', faction: '吴', hp: 260, attack: 65, defense: 45, speed: 50, icon: '📜', title: '谋士' },
+    { id: 'lusu', name: '鲁肃', rarity: 'SSR', faction: '吴', hp: 290, attack: 75, defense: 48, speed: 55, icon: '🤝', title: '战略家' },
+    { id: 'sunshangxiang', name: '孙尚香', rarity: 'SSR', faction: '吴', hp: 320, attack: 80, defense: 45, speed: 68, icon: '🏹', title: '弓腰姬' },
+    { id: 'daitai', name: '大乔', rarity: 'SSR', faction: '吴', hp: 250, attack: 60, defense: 40, speed: 58, icon: '🌸', title: '国色' },
+    { id: 'xiaoqiao', name: '小乔', rarity: 'SSR', faction: '吴', hp: 240, attack: 62, defense: 38, speed: 60, icon: '🌺', title: '天香' },
+    { id: 'zhurong_wu', name: '朱然', rarity: 'SR', faction: '吴', hp: 330, attack: 72, defense: 50, speed: 58, icon: '⚔️', title: '火攻将军' },
+    { id: 'panzhang', name: '潘璋', rarity: 'SR', faction: '吴', hp: 340, attack: 70, defense: 52, speed: 52, icon: '🔱', title: '擒龙将军' },
+    // 群雄（12 人）
     { id: 'lvbu', name: '吕布', rarity: 'UR', faction: '群', hp: 520, attack: 120, defense: 65, speed: 58, icon: '😈', title: '飞将' },
-    { id: 'dongzhuo', name: '董卓', rarity: 'SSR', faction: '群', hp: 550, attack: 85, defense: 70, speed: 40, icon: '👿', title: '暴君' }
+    { id: 'dongzhuo', name: '董卓', rarity: 'SSR', faction: '群', hp: 550, attack: 85, defense: 70, speed: 40, icon: '👿', title: '暴君' },
+    { id: 'yuanhao', name: '袁绍', rarity: 'SSR', faction: '群', hp: 380, attack: 75, defense: 55, speed: 50, icon: '👑', title: '四世三公' },
+    { id: 'gongsunzan', name: '公孙瓒', rarity: 'SR', faction: '群', hp: 340, attack: 72, defense: 50, speed: 62, icon: '🐎', title: '白马将军' },
+    { id: 'diaochan', name: '貂蝉', rarity: 'UR', faction: '群', hp: 260, attack: 78, defense: 40, speed: 72, icon: '🌙', title: '闭月' },
+    { id: 'zhangjiao', name: '张角', rarity: 'SSR', faction: '群', hp: 290, attack: 85, defense: 42, speed: 55, icon: '⚡', title: '天公将军' },
+    { id: 'zhangbao', name: '张宝', rarity: 'SR', faction: '群', hp: 270, attack: 70, defense: 40, speed: 50, icon: '🔮', title: '地公将军' },
+    { id: 'zhangliang', name: '张梁', rarity: 'SR', faction: '群', hp: 280, attack: 68, defense: 42, speed: 48, icon: '🗡️', title: '人公将军' },
+    { id: 'huaxiong', name: '华雄', rarity: 'SR', faction: '群', hp: 400, attack: 75, defense: 55, speed: 45, icon: '👹', title: '勇将' },
+    { id: 'liubiao', name: '刘表', rarity: 'SR', faction: '群', hp: 320, attack: 65, defense: 50, speed: 45, icon: '📜', title: '荆州牧' },
+    { id: 'maoteng', name: '毛玠', rarity: 'R', faction: '群', hp: 200, attack: 48, defense: 38, speed: 42, icon: '📋', title: '会计' },
+    { id: 'chen', name: '陈宫', rarity: 'SR', faction: '群', hp: 280, attack: 72, defense: 45, speed: 52, icon: '🎯', title: '谋士' }
 ];
 
 // ==================== 装备数据库（24 件）====================
@@ -115,13 +145,379 @@ const QUALITY_NAMES = {
     red: '红色'
 };
 
+// ==================== 计谋策略数据库（FC 吞食天地经典计谋）====================
+const TACTICS_DATABASE = [
+    // ===== 火系计谋（5 级）=====
+    { 
+        id: 'lian_huo', 
+        name: '炼火计', 
+        type: 'damage', 
+        effect: '对敌方造成极少量火属性伤害',
+        damageBase: 30,
+        target: 'single_enemy',
+        levelReq: 1,
+        cooldown: 1,
+        mpCost: 2,
+        icon: '🔥',
+        description: '初级火攻，烈焰初现！'
+    },
+    { 
+        id: 'ye_huo', 
+        name: '业火计', 
+        type: 'damage', 
+        effect: '对敌方造成少量火属性伤害',
+        damageBase: 80,
+        target: 'single_enemy',
+        levelReq: 11,
+        cooldown: 1,
+        mpCost: 4,
+        icon: '🔥🔥',
+        description: '火势渐旺，焚尽敌军！'
+    },
+    { 
+        id: 'yan_re', 
+        name: '炎热计', 
+        type: 'damage', 
+        effect: '对敌方造成中等火属性伤害',
+        damageBase: 150,
+        target: 'single_enemy',
+        levelReq: 20,
+        cooldown: 2,
+        mpCost: 6,
+        icon: '🔥🔥🔥',
+        description: '烈火燎原，势不可挡！'
+    },
+    { 
+        id: 'da_re', 
+        name: '大热计', 
+        type: 'damage', 
+        effect: '对敌方造成大量火属性伤害',
+        damageBase: 300,
+        target: 'single_enemy',
+        levelReq: 32,
+        cooldown: 2,
+        mpCost: 6,
+        icon: '🔥🔥🔥🔥',
+        description: '烈焰冲天，焚尽八荒！'
+    },
+    { 
+        id: 'huo_shen', 
+        name: '火神计', 
+        type: 'damage', 
+        effect: '对敌方造成海量火属性伤害',
+        damageBase: 600,
+        target: 'single_enemy',
+        levelReq: 40,
+        cooldown: 3,
+        mpCost: 8,
+        icon: '🔥🔥🔥🔥🔥',
+        description: '火神降临，万物俱焚！'
+    },
+    
+    // ===== 水系计谋（5 级）=====
+    { 
+        id: 'shui_tuo', 
+        name: '水途计', 
+        type: 'damage', 
+        effect: '对敌方造成极少量水属性伤害',
+        damageBase: 40,
+        target: 'single_enemy',
+        levelReq: 3,
+        cooldown: 1,
+        mpCost: 3,
+        icon: '💧',
+        description: '细水长流，润物无声！'
+    },
+    { 
+        id: 'shui_xing', 
+        name: '水星计', 
+        type: 'damage', 
+        effect: '对敌方造成少量水属性伤害',
+        damageBase: 100,
+        target: 'single_enemy',
+        levelReq: 12,
+        cooldown: 1,
+        mpCost: 5,
+        icon: '💧💧',
+        description: '水星闪耀，寒光逼人！'
+    },
+    { 
+        id: 'shui_lei', 
+        name: '水雷计', 
+        type: 'damage', 
+        effect: '对敌方造成中等水属性伤害',
+        damageBase: 180,
+        target: 'single_enemy',
+        levelReq: 22,
+        cooldown: 2,
+        mpCost: 6,
+        icon: '💧⚡',
+        description: '水雷交加，震慑三军！'
+    },
+    { 
+        id: 'hong_shui', 
+        name: '洪水计', 
+        type: 'damage', 
+        effect: '对敌方造成大量水属性伤害',
+        damageBase: 350,
+        target: 'single_enemy',
+        levelReq: 34,
+        cooldown: 2,
+        mpCost: 8,
+        icon: '🌊',
+        description: '洪水滔天，吞噬一切！'
+    },
+    { 
+        id: 'shui_long', 
+        name: '水龙计', 
+        type: 'damage', 
+        effect: '对敌方造成海量水属性伤害',
+        damageBase: 700,
+        target: 'single_enemy',
+        levelReq: 42,
+        cooldown: 3,
+        mpCost: 10,
+        icon: '🐉💧',
+        description: '水龙咆哮，翻江倒海！'
+    },
+    
+    // ===== 石系计谋（5 级）=====
+    { 
+        id: 'luo_mu', 
+        name: '落木计', 
+        type: 'damage', 
+        effect: '对敌方造成极少量石属性伤害',
+        damageBase: 50,
+        target: 'single_enemy',
+        levelReq: 4,
+        cooldown: 1,
+        mpCost: 4,
+        icon: '🪨',
+        description: '落木萧萧，随风而下！'
+    },
+    { 
+        id: 'liu_mu', 
+        name: '流木计', 
+        type: 'damage', 
+        effect: '对敌方造成少量石属性伤害',
+        damageBase: 120,
+        target: 'single_enemy',
+        levelReq: 13,
+        cooldown: 1,
+        mpCost: 4,
+        icon: '🌲🪨',
+        description: '流木冲击，势如破竹！'
+    },
+    { 
+        id: 'luo_shi', 
+        name: '落石计', 
+        type: 'damage', 
+        effect: '对敌方造成中等石属性伤害',
+        damageBase: 200,
+        target: 'single_enemy',
+        levelReq: 24,
+        cooldown: 2,
+        mpCost: 6,
+        icon: '🪨🪨',
+        description: '落石滚滚，山崩地裂！'
+    },
+    { 
+        id: 'tou_shi', 
+        name: '投石计', 
+        type: 'damage', 
+        effect: '对敌方造成大量石属性伤害',
+        damageBase: 400,
+        target: 'single_enemy',
+        levelReq: 35,
+        cooldown: 2,
+        mpCost: 8,
+        icon: '🪨🪨🪨',
+        description: '投石问路，石破天惊！'
+    },
+    { 
+        id: 'ji_shi', 
+        name: '激石计', 
+        type: 'damage', 
+        effect: '对敌方造成海量石属性伤害',
+        damageBase: 800,
+        target: 'single_enemy',
+        levelReq: 44,
+        cooldown: 3,
+        mpCost: 10,
+        icon: '🪨🪨🪨🪨',
+        description: '激石飞溅，碎石穿空！'
+    },
+    
+    // ===== 回复系计谋（5 级）=====
+    { 
+        id: 'chi_xin', 
+        name: '赤心计', 
+        type: 'heal', 
+        effect: '回复我方兵力 200 点左右',
+        healBase: 200,
+        target: 'single_ally',
+        levelReq: 2,
+        cooldown: 1,
+        mpCost: 3,
+        icon: '💚',
+        description: '赤心相待，救死扶伤！'
+    },
+    { 
+        id: 'tong_xian', 
+        name: '铜仙计', 
+        type: 'heal', 
+        effect: '回复我方兵力 800 点左右',
+        healBase: 800,
+        target: 'single_ally',
+        levelReq: 17,
+        cooldown: 1,
+        mpCost: 5,
+        icon: '💚💚',
+        description: '铜仙妙手，起死回生！'
+    },
+    { 
+        id: 'yin_xian', 
+        name: '银仙计', 
+        type: 'heal', 
+        effect: '回复我方兵力 2000 点左右',
+        healBase: 2000,
+        target: 'single_ally',
+        levelReq: 28,
+        cooldown: 2,
+        mpCost: 6,
+        icon: '💚💚💚',
+        description: '银仙降临，妙手回春！'
+    },
+    { 
+        id: 'wan_fu', 
+        name: '完复计', 
+        type: 'heal', 
+        effect: '回复我方兵力 5000 点左右',
+        healBase: 5000,
+        target: 'single_ally',
+        levelReq: 38,
+        cooldown: 2,
+        mpCost: 8,
+        icon: '💚💚💚💚',
+        description: '完全恢复，力挽狂澜！'
+    },
+    { 
+        id: 'jin_xian', 
+        name: '金仙计', 
+        type: 'heal', 
+        effect: '回复我方兵力 10000 点左右',
+        healBase: 10000,
+        target: 'single_ally',
+        levelReq: 46,
+        cooldown: 3,
+        mpCost: 10,
+        icon: '💚💚💚💚💚',
+        description: '金仙大法，普济众生！'
+    },
+    
+    // ===== 离间系计谋 =====
+    { 
+        id: 'yi_xin', 
+        name: '疑心计', 
+        type: 'confuse', 
+        effect: '使敌方单体疑心，不会行动',
+        debuffType: 'confuse',
+        debuffDuration: 2,
+        target: 'single_enemy',
+        levelReq: 10,
+        cooldown: 2,
+        mpCost: 6,
+        icon: '❓',
+        description: '疑心重重，举棋不定！'
+    },
+    { 
+        id: 'li_jian', 
+        name: '离间计', 
+        type: 'confuse', 
+        effect: '使敌方单体离间，攻击自己人',
+        debuffType: 'confuse_attack',
+        debuffDuration: 2,
+        target: 'single_enemy',
+        levelReq: 25,
+        cooldown: 3,
+        mpCost: 8,
+        icon: '💔',
+        description: '离间之计，坐山观虎！'
+    },
+    { 
+        id: 'pan_li', 
+        name: '叛离计', 
+        type: '叛离', 
+        effect: '使敌方单体叛离，帮助我方攻击',
+        debuffType: '叛离',
+        debuffDuration: 2,
+        target: 'single_enemy',
+        levelReq: 39,
+        cooldown: 4,
+        mpCost: 16,
+        icon: '⚔️💔',
+        description: '叛离之计，反戈一击！'
+    },
+    
+    // ===== 特殊计谋 =====
+    { 
+        id: 'an_sha', 
+        name: '暗杀计', 
+        type: 'assassinate', 
+        effect: '直接秒杀敌方单体（对部分将领无效）',
+        target: 'single_enemy',
+        levelReq: 45,
+        cooldown: 5,
+        mpCost: 16,
+        icon: '🗡️',
+        description: '暗杀无形，一击必杀！'
+    },
+    { 
+        id: 'zhao_hun', 
+        name: '招魂计', 
+        type: 'revive', 
+        effect: '复活我方单体武将',
+        revivePercent: 1.0,
+        target: 'dead_ally',
+        levelReq: 36,
+        cooldown: 4,
+        mpCost: 32,
+        icon: '✨',
+        description: '招魂归位，起死回生！'
+    },
+    { 
+        id: 'xue_lu', 
+        name: '血路计', 
+        type: 'escape', 
+        effect: '强行从战斗中逃跑',
+        target: 'special',
+        levelReq: 15,
+        cooldown: 1,
+        mpCost: 8,
+        icon: '🏃',
+        description: '杀出重围，全身而退！'
+    },
+    { 
+        id: 'yan_dun', 
+        name: '烟遁计', 
+        type: 'escape', 
+        effect: '使用烟雾遁走，必定成功逃跑',
+        target: 'special',
+        levelReq: 20,
+        cooldown: 2,
+        mpCost: 8,
+        icon: '💨',
+        description: '烟遁无形，神不知鬼不觉！'
+    }
+];
+
 // ==================== 关卡数据库 ====================
 const LEVELS = [
     {
         id: 1, name: '涿郡起兵', difficulty: '简单', enemyCount: 2,
         enemies: [
-            { name: '黄巾小兵', hp: 80, attack: 15, defense: 8 },
-            { name: '黄巾小兵', hp: 80, attack: 15, defense: 8 }
+            { name: '黄巾小兵', hp: 80, attack: 15, defense: 8, intelligence: 10 },
+            { name: '黄巾小兵', hp: 80, attack: 15, defense: 8, intelligence: 10 }
         ],
         reward: { gold: 50, exp: 30, gem: 0, equipment: null },
         unlockReq: '新游戏解锁',
@@ -130,8 +526,8 @@ const LEVELS = [
     {
         id: 2, name: '讨伐董卓', difficulty: '简单', enemyCount: 2,
         enemies: [
-            { name: '董卓军', hp: 120, attack: 25, defense: 15 },
-            { name: '董卓军', hp: 120, attack: 25, defense: 15 }
+            { name: '董卓军', hp: 120, attack: 25, defense: 15, intelligence: 20 },
+            { name: '董卓军', hp: 120, attack: 25, defense: 15, intelligence: 20 }
         ],
         reward: { gold: 80, exp: 50, gem: 1, equipment: 'w1' },
         unlockReq: '通过第 1 关',
@@ -140,9 +536,9 @@ const LEVELS = [
     {
         id: 3, name: '三英战吕布', difficulty: '中等', enemyCount: 3,
         enemies: [
-            { name: '吕布', hp: 300, attack: 80, defense: 50 },
-            { name: '并州狼骑', hp: 100, attack: 30, defense: 20 },
-            { name: '并州狼骑', hp: 100, attack: 30, defense: 20 }
+            { name: '吕布', hp: 300, attack: 80, defense: 50, intelligence: 60, isBoss: true },
+            { name: '并州狼骑', hp: 100, attack: 30, defense: 20, intelligence: 15 },
+            { name: '并州狼骑', hp: 100, attack: 30, defense: 20, intelligence: 15 }
         ],
         reward: { gold: 150, exp: 100, gem: 3, equipment: 'a1' },
         unlockReq: '通过第 2 关',
@@ -1213,7 +1609,7 @@ class Game {
             </div>
             
             <div id="summon-modal" class="modal">
-                <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-content" style="max-width: 800px;">
                     <h2>🎴 招募武将（30 位英雄）</h2>
                     <div class="summon-rates" style="display: flex; justify-content: space-around; margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 10px;">
                         <div class="rate"><span>UR</span><span>2%</span></div>
@@ -1222,11 +1618,14 @@ class Game {
                         <div class="rate"><span>R</span><span>65%</span></div>
                     </div>
                     <div class="summon-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
-                        <button class="btn btn-success" onclick="game.summon(1)">🎴 招募一次 (100💎)</button>
-                        <button class="btn btn-primary" onclick="game.summon(10)">🎴 招募十次 (1000💎)</button>
+                        <button class="btn btn-success" onclick="game.summon(1)" style="position: relative; overflow: hidden;">🎴 招募一次 (100💎)</button>
+                        <button class="btn btn-primary" onclick="game.summon(10)" style="position: relative; overflow: hidden;">🎴 招募十次 (1000💎)</button>
                     </div>
+                    
+                    <div id="summon-pool" style="margin-top: 20px;"></div>
+                    
                     <div id="summon-result"></div>
-                    <button class="btn btn-secondary" onclick="game.closeModal('summon-modal')">关闭</button>
+                    <button class="btn btn-secondary" onclick="game.closeModal('summon-modal')" style="margin-top: 15px;">关闭</button>
                 </div>
             </div>
             
@@ -1286,13 +1685,13 @@ class Game {
         
         const maxLevel = 100;
         if (hero.level >= maxLevel) {
-            alert('⚠️ 武将已达满级 100 级');
+            this.showModalBox('等级已满', '⚠️ 武将已达满级 100 级');
             return;
         }
         
         const cost = hero.level * 100;
         if (this.player.gold < cost) {
-            alert(`❌ 金币不足！\n需要 ${cost} 金币\n当前 ${this.player.gold} 金币`);
+            this.showModalBox('金币不足', `❌ 金币不足！\n需要 ${cost} 金币\n当前 ${this.player.gold} 金币`);
             return;
         }
         
@@ -1329,7 +1728,7 @@ class Game {
             // 金币不足或已满级，显示总结
             this.updateResourceDisplay();
             this.showHeroList();
-            alert(`✅ 一键升级完成！\n${hero.name} 从 Lv.${oldLevel} → Lv.${hero.level}\n消耗金币：${cost}`);
+            this.showModalBox('升级完成', `✅ 一键升级完成！\n${hero.name} 从 Lv.${oldLevel} → Lv.${hero.level}\n消耗金币：${cost}`, true, 2000);
         } else {
             // 单级升级模式：只显示升级结果，不询问是否继续
             this.updateResourceDisplay();
@@ -1354,7 +1753,7 @@ class Game {
         
         const maxLevel = 100;
         if (hero.level >= maxLevel) {
-            alert('⚠️ 武将已达满级 100 级');
+            this.showToast('⚠️ 武将已达满级 100 级');
             return;
         }
         
@@ -1374,7 +1773,7 @@ class Game {
         }
         
         if (upgradedLevels === 0) {
-            alert('❌ 金币不足！');
+            this.showToast('❌ 金币不足！');
             return;
         }
         
@@ -1438,7 +1837,7 @@ class Game {
         
         // 检查武将是否在阵容中
         if (this.player.team.includes(hero.id)) {
-            alert('⚠️ 该武将正在阵容中，请先下阵后再升星！\n\n💡 提示：在"阵容"界面将该武将从阵容中移除');
+            this.showToast('⚠️ 该武将正在阵容中，请先下阵后再升星！');
             return;
         }
         
@@ -1457,7 +1856,7 @@ class Game {
         
         // 严格验证需求数量
         if (requiredCopies <= 0 || requiredCopies > 5) {
-            alert('❌ 升星条件错误，请重新尝试');
+            this.showToast('❌ 升星条件错误，请重新尝试');
             return;
         }
         
@@ -1473,7 +1872,7 @@ class Game {
         
         // 严格验证是否有足够的重复武将
         if (availableCopies < requiredCopies) {
-            alert(`❌ 重复武将不足！\n需要 ${requiredCopies} 个重复武将\n当前 ${availableCopies} 个`);
+            this.showModalBox('升星失败', `❌ 重复武将不足！\n需要 ${requiredCopies} 个重复武将\n当前 ${availableCopies} 个`);
             return;
         }
         
@@ -1505,7 +1904,7 @@ class Game {
         
         // 验证是否成功移除了正确数量的武将
         if (removedCount !== requiredCopies) {
-            alert('❌ 升星失败：无法移除重复武将');
+            this.showToast('❌ 升星失败：无法移除重复武将');
             return;
         }
         
@@ -1514,7 +1913,7 @@ class Game {
         
         // 再次验证星级是否超过最大值
         if (hero.star > maxStar) {
-            alert('❌ 升星失败：星级超过最大值');
+            this.showToast('❌ 升星失败：星级超过最大值');
             hero.star = maxStar;
             return;
         }
@@ -1845,34 +2244,212 @@ class Game {
                     <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
                         <h4>📋 出售说明</h4>
                         <ul style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.8;">
-                            <li>选择要出售的装备品质</li>
+                            <li>选择要出售的装备品质（可多选）</li>
                             <li>该品质的所有未穿戴装备将被出售</li>
                             <li>已穿戴的装备不会被出售</li>
                             <li>获得金币返还</li>
                         </ul>
                     </div>
                     
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
-                        ${Object.keys(QUALITY_NAMES).map(quality => `
-                            <button class="btn" onclick="game.sellEquipmentBatch('${quality}')" 
-                                style="background: linear-gradient(135deg, ${QUALITY_COLORS[quality]}, #333); color: white; padding: 20px; border-radius: 10px; font-size: 16px;">
-                                出售${QUALITY_NAMES[quality]}装备
-                            </button>
-                        `).join('')}
+                    <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h4>🎯 选择出售品质</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 15px;">
+                            ${Object.keys(QUALITY_NAMES).map(quality => `
+                                <label style="background: linear-gradient(135deg, ${QUALITY_COLORS[quality]}, #333); padding: 15px; border-radius: 10px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s;">
+                                    <div style="display: flex; align-items: center;">
+                                        <input type="checkbox" id="sell-${quality}" value="${quality}" style="margin-right: 10px; transform: scale(1.3);" onchange="game.previewSell()">
+                                        <span style="font-size: 16px;">${QUALITY_NAMES[quality]}</span>
+                                    </div>
+                                    <span id="count-${quality}" style="background: rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 20px; font-size: 14px;">0 件</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div id="sell-preview" style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px; display: none;">
+                        <h4>📊 出售预览</h4>
+                        <div style="margin-top: 15px; color: white;">
+                            <div style="font-size: 16px; margin-bottom: 10px;">总数量：<span id="total-count" style="color: #f39c12; font-weight: bold; font-size: 20px;">0</span> 件</div>
+                            <div style="font-size: 16px;">总价格：<span id="total-price" style="color: #f39c12; font-weight: bold; font-size: 20px;">0</span> 金币</div>
+                        </div>
                     </div>
                     
                     <div style="margin-top: 20px; text-align: center;">
-                        <button class="btn btn-secondary" onclick="game.showScreen('home')" style="padding: 15px 40px; font-size: 18px;">返回</button>
+                        <button class="btn btn-warning" onclick="game.sellSelectedBatch()" style="padding: 15px 40px; font-size: 18px;">💰 确认出售</button>
+                        <button class="btn btn-secondary" onclick="game.showScreen('home')" style="padding: 15px 40px; font-size: 18px; margin-left: 10px;">返回</button>
                     </div>
                 </div>
             `;
             
             content.innerHTML = html;
+            
+            // 初始化显示各品质的数量
+            this.updateSellCounts();
         }, 100);
     }
     
+    // 更新各品质装备的数量显示
+    updateSellCounts() {
+        const wornEquipment = new Set();
+        this.player.heroes.forEach(hero => {
+            Object.values(hero.equipment).forEach(equip => {
+                if (equip) wornEquipment.add(equip.id + (equip.level || ''));
+            });
+        });
+        
+        const counts = {};
+        Object.keys(QUALITY_NAMES).forEach(quality => {
+            counts[quality] = 0;
+        });
+        
+        this.player.inventory.forEach(item => {
+            const itemKey = item.id + (item.level || '');
+            if (!wornEquipment.has(itemKey)) {
+                counts[item.quality] = (counts[item.quality] || 0) + 1;
+            }
+        });
+        
+        Object.keys(counts).forEach(quality => {
+            const countEl = document.getElementById(`count-${quality}`);
+            if (countEl) {
+                countEl.textContent = `${counts[quality]} 件`;
+            }
+        });
+    }
+    
+    // 预览出售
+    previewSell() {
+        const selectedQualities = [];
+        Object.keys(QUALITY_NAMES).forEach(quality => {
+            const checkbox = document.getElementById(`sell-${quality}`);
+            if (checkbox && checkbox.checked) {
+                selectedQualities.push(quality);
+            }
+        });
+        
+        if (selectedQualities.length === 0) {
+            const previewDiv = document.getElementById('sell-preview');
+            if (previewDiv) previewDiv.style.display = 'none';
+            return;
+        }
+        
+        const wornEquipment = new Set();
+        this.player.heroes.forEach(hero => {
+            Object.values(hero.equipment).forEach(equip => {
+                if (equip) wornEquipment.add(equip.id + (equip.level || ''));
+            });
+        });
+        
+        let totalCount = 0;
+        let totalPrice = 0;
+        
+        const basePrice = {
+            white: 10,
+            green: 25,
+            blue: 50,
+            purple: 100,
+            orange: 200,
+            red: 500
+        };
+        
+        this.player.inventory.forEach(item => {
+            const itemKey = item.id + (item.level || '');
+            if (!wornEquipment.has(itemKey) && selectedQualities.includes(item.quality)) {
+                totalCount++;
+                totalPrice += basePrice[item.quality] || 10;
+            }
+        });
+        
+        const previewDiv = document.getElementById('sell-preview');
+        const totalCountEl = document.getElementById('total-count');
+        const totalPriceEl = document.getElementById('total-price');
+        
+        if (previewDiv) previewDiv.style.display = 'block';
+        if (totalCountEl) totalCountEl.textContent = totalCount;
+        if (totalPriceEl) totalPriceEl.textContent = totalPrice;
+    }
+    
+    // 出售选中的装备
+    sellSelectedBatch() {
+        const selectedQualities = [];
+        Object.keys(QUALITY_NAMES).forEach(quality => {
+            const checkbox = document.getElementById(`sell-${quality}`);
+            if (checkbox && checkbox.checked) {
+                selectedQualities.push(quality);
+            }
+        });
+        
+        if (selectedQualities.length === 0) {
+            this.showToast('⚠️ 请至少选择一个品质');
+            return;
+        }
+        
+        const wornEquipment = new Set();
+        this.player.heroes.forEach(hero => {
+            Object.values(hero.equipment).forEach(equip => {
+                if (equip) wornEquipment.add(equip.id + (equip.level || ''));
+            });
+        });
+        
+        const sellableIndices = [];
+        const basePrice = {
+            white: 10,
+            green: 25,
+            blue: 50,
+            purple: 100,
+            orange: 200,
+            red: 500
+        };
+        
+        let totalCount = 0;
+        let totalPrice = 0;
+        
+        this.player.inventory.forEach((item, index) => {
+            const itemKey = item.id + (item.level || '');
+            if (!wornEquipment.has(itemKey) && selectedQualities.includes(item.quality)) {
+                sellableIndices.push(index);
+                totalCount++;
+                totalPrice += basePrice[item.quality] || 10;
+            }
+        });
+        
+        if (totalCount === 0) {
+            this.showToast('⚠️ 没有可出售的装备');
+            return;
+        }
+        
+        const confirm = confirm(
+            `💰 批量出售装备\n\n` +
+            `出售品质：${selectedQualities.map(q => QUALITY_NAMES[q]).join('、')}\n` +
+            `出售数量：${totalCount} 件\n` +
+            `获得金币：${totalPrice}\n\n` +
+            `⚠️ 注意：已穿戴的装备不会被出售\n\n` +
+            `是否确认出售？`
+        );
+        
+        if (!confirm) return;
+        
+        // 移除装备（从后往前删除）
+        sellableIndices.sort((a, b) => b - a);
+        sellableIndices.forEach(index => {
+            this.player.inventory.splice(index, 1);
+        });
+        
+        // 添加金币
+        this.player.gold += totalPrice;
+        
+        this.updateResourceDisplay();
+        this.renderEquipmentList();
+        this.saveGame();
+        
+        this.showModalBox('出售成功', `✅ 出售成功！\n获得 ${totalPrice} 金币`, true, 2000);
+        
+        // 刷新界面
+        this.showBatchSellUI();
+    }
+    
     // 装备强化系统
-    enhanceEquipment(index, materialIndices) {
+    enhanceEquipment(index, materialIndices, autoEnhanceMax = false) {
         // 防抖检查
         if (!this.canPerformAction('enhanceEquip', 1000)) {
             console.log('⚠️ 强化操作过于频繁，请稍后再试');
@@ -1881,19 +2458,33 @@ class Game {
         
         const targetEquip = this.player.inventory[index];
         if (!targetEquip) {
-            alert('❌ 请选择要强化的装备');
+            this.showToast('❌ 请选择要强化的装备');
+            return;
+        }
+        
+        const maxLevel = 10;
+        const currentLevel = targetEquip.level || 1;
+        
+        if (currentLevel >= maxLevel) {
+            this.showToast('⚠️ 装备已达满级，无法继续强化');
+            return;
+        }
+        
+        // 一键强化到满级逻辑
+        if (autoEnhanceMax) {
+            this.enhanceToMaxLevel(index);
             return;
         }
         
         // 检查是否有强化材料
         if (!materialIndices || materialIndices.length === 0) {
-            alert('❌ 请选择强化材料（至少 1 件装备）');
+            this.showToast('❌ 请选择强化材料（至少 1 件装备）');
             return;
         }
         
         // 检查材料装备是否足够
         if (materialIndices.length > this.player.inventory.length - 1) {
-            alert('❌ 强化材料数量不足');
+            this.showToast('❌ 强化材料数量不足');
             return;
         }
         
@@ -1916,14 +2507,6 @@ class Game {
         });
         
         // 显示强化预览
-        const currentLevel = targetEquip.level || 1;
-        const maxLevel = 10;
-        
-        if (currentLevel >= maxLevel) {
-            alert('⚠️ 装备已达满级，无法继续强化');
-            return;
-        }
-        
         const expNeeded = currentLevel * 100;
         const confirmEnhance = confirm(
             `⚔️ 装备强化预览\n\n` +
@@ -1975,10 +2558,133 @@ class Game {
         );
     }
     
+    // 一键强化到满级
+    enhanceToMaxLevel(index) {
+        const targetEquip = this.player.inventory[index];
+        if (!targetEquip) {
+            this.showToast('❌ 请选择要强化的装备');
+            return;
+        }
+        
+        const currentLevel = targetEquip.level || 1;
+        const maxLevel = 10;
+        
+        if (currentLevel >= maxLevel) {
+            this.showToast('⚠️ 装备已达满级，无法继续强化');
+            return;
+        }
+        
+        // 计算强化到满级需要的经验
+        let totalExpNeeded = 0;
+        for (let lvl = currentLevel; lvl < maxLevel; lvl++) {
+            totalExpNeeded += lvl * 100;
+        }
+        
+        // 计算需要的材料
+        const qualityExp = {
+            white: 10,
+            green: 25,
+            blue: 50,
+            purple: 100,
+            orange: 200,
+            red: 400
+        };
+        
+        // 筛选可用的材料装备（排除已穿戴的和目标装备本身）
+        const wornEquipment = new Set();
+        this.player.heroes.forEach(hero => {
+            Object.values(hero.equipment).forEach(equip => {
+                if (equip) wornEquipment.add(equip.id + (equip.level || ''));
+            });
+        });
+        
+        const availableMaterials = [];
+        this.player.inventory.forEach((item, idx) => {
+            if (idx !== index) {
+                const itemKey = item.id + (item.level || '');
+                if (!wornEquipment.has(itemKey)) {
+                    availableMaterials.push({
+                        index: idx,
+                        exp: qualityExp[item.quality] || 10,
+                        item: item
+                    });
+                }
+            }
+        });
+        
+        // 按经验值排序，优先使用低品质材料
+        availableMaterials.sort((a, b) => a.exp - b.exp);
+        
+        // 累计经验直到满足需求
+        let totalExp = 0;
+        const materialsToUse = [];
+        for (const mat of availableMaterials) {
+            materialsToUse.push(mat.index);
+            totalExp += mat.exp;
+            if (totalExp >= totalExpNeeded) break;
+        }
+        
+        if (totalExp < totalExpNeeded) {
+            const confirm = confirm(
+                `⚠️ 材料不足提示\n\n` +
+                `强化到满级需要经验：${totalExpNeeded}\n` +
+                `当前可用材料总经验：${totalExp}\n\n` +
+                `是否使用所有可用材料进行强化？`
+            );
+            if (!confirm) return;
+        } else {
+            const confirm = confirm(
+                `⚔️ 一键强化到满级\n\n` +
+                `目标装备：${targetEquip.name} (+${currentLevel})\n` +
+                `需要经验：${totalExpNeeded}\n` +
+                `消耗材料：${materialsToUse.length} 件装备\n\n` +
+                `是否确认强化到 +10？`
+            );
+            if (!confirm) return;
+        }
+        
+        // 保存旧属性
+        const oldAttr = this.getEquipAttrValue(targetEquip);
+        
+        // 移除材料装备（从后往前删除）
+        materialsToUse.sort((a, b) => b - a);
+        materialsToUse.forEach(matIndex => {
+            this.player.inventory.splice(matIndex, 1);
+        });
+        
+        // 增加强化经验并升级
+        targetEquip.enhanceExp = (targetEquip.enhanceExp || 0) + totalExp;
+        targetEquip.level = targetEquip.level || 1;
+        
+        while (targetEquip.enhanceExp >= targetEquip.level * 100 && targetEquip.level < maxLevel) {
+            targetEquip.enhanceExp -= targetEquip.level * 100;
+            targetEquip.level++;
+            
+            // 提升属性
+            if (targetEquip.attack) targetEquip.attack += Math.floor(targetEquip.attack * 0.1);
+            if (targetEquip.defense) targetEquip.defense += Math.floor(targetEquip.defense * 0.1);
+            if (targetEquip.hp) targetEquip.hp += Math.floor(targetEquip.hp * 0.1);
+            if (targetEquip.speed) targetEquip.speed += Math.floor(targetEquip.speed * 0.1);
+        }
+        
+        const newAttr = this.getEquipAttrValue(targetEquip);
+        
+        this.updateTeamStats();
+        this.renderEquipmentList();
+        this.saveGame();
+        this.updateDailyQuest('equip_upgrade');
+        
+        alert(
+            `✅ 强化成功！\n\n` +
+            `${targetEquip.name} +${currentLevel} → +${targetEquip.level}\n` +
+            `属性：${oldAttr} → ${newAttr}`
+        );
+    }
+    
     // 显示装备强化界面
     showEnhanceUI() {
         if (this.player.inventory.length < 2) {
-            alert('⚠️ 背包中至少需要 2 件装备才能强化');
+            this.showToast('⚠️ 背包中至少需要 2 件装备才能强化');
             return;
         }
         
@@ -2020,6 +2726,7 @@ class Game {
                     
                     <div style="margin-top: 20px; text-align: center;">
                         <button class="btn btn-primary" onclick="game.confirmEnhance()" style="padding: 15px 40px; font-size: 18px;">✨ 开始强化</button>
+                        <button class="btn btn-warning" onclick="game.enhanceMaxQuick()" style="padding: 15px 40px; font-size: 18px; margin-left: 10px;">🚀 一键满级</button>
                         <button class="btn btn-secondary" onclick="game.showScreen('home')" style="padding: 15px 40px; font-size: 18px; margin-left: 10px;">返回</button>
                     </div>
                     
@@ -2102,12 +2809,12 @@ class Game {
         const selection = this.state.enhanceSelection;
         
         if (selection.targetIndex === null) {
-            alert('❌ 请先选择要强化的目标装备');
+            this.showToast('❌ 请先选择要强化的目标装备');
             return;
         }
         
         if (selection.materialIndices.length === 0) {
-            alert('❌ 请至少选择 1 件强化材料');
+            this.showToast('❌ 请至少选择 1 件强化材料');
             return;
         }
         
@@ -2118,6 +2825,57 @@ class Game {
             targetIndex: null,
             materialIndices: []
         };
+    }
+    
+    // 快速一键满级：弹出选择框选择目标装备
+    enhanceMaxQuick() {
+        if (this.player.inventory.length < 1) {
+            this.showToast('⚠️ 背包中没有可强化的装备');
+            return;
+        }
+        
+        // 筛选出未达满级的装备
+        const upgradeableEquips = this.player.inventory.filter((item, idx) => {
+            const level = item.level || 1;
+            return level < 10;
+        });
+        
+        if (upgradeableEquips.length === 0) {
+            alert('✅ 所有装备都已强化到满级！');
+            return;
+        }
+        
+        // 显示装备选择列表
+        const html = `
+            <div style="padding: 20px; max-height: 400px; overflow-y: auto;">
+                <h3 style="text-align: center; margin-bottom: 20px;">🚀 选择要强化的装备</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">
+                    ${upgradeableEquips.map((item, idx) => {
+                        const originalIndex = this.player.inventory.indexOf(item);
+                        return `
+                            <div onclick="game.enhanceEquipment(${originalIndex}, null, true)" 
+                                style="background: linear-gradient(135deg, ${QUALITY_COLORS[item.quality]} 0%, #333 100%); padding: 15px; border-radius: 10px; color: white; cursor: pointer; border: 3px solid transparent; transition: all 0.3s;">
+                                <div style="font-weight: bold; font-size: 14px;">${item.name}</div>
+                                <div style="font-size: 11px;">${QUALITY_NAMES[item.quality]}</div>
+                                <div style="font-size: 12px; margin-top: 5px;">+${this.getEquipAttrValue(item)}</div>
+                                ${item.level ? `<div style="font-size: 10px; color: #f39c12;">+${item.level}</div>` : '<div style="font-size: 10px; color: #999;">+0</div>'}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn btn-secondary" onclick="game.showScreen('home')" style="padding: 15px 40px; font-size: 18px;">返回</button>
+                </div>
+            </div>
+        `;
+        
+        this.showScreen('equipment');
+        setTimeout(() => {
+            const content = document.getElementById('equipment-content');
+            if (content) {
+                content.innerHTML = html;
+            }
+        }, 100);
     }
     
     equipToHero(heroIndex) {
@@ -2201,7 +2959,7 @@ class Game {
     startLevel(levelId) {
         // 检查是否正在战斗中
         if (this.battleRunning || this.state.battle) {
-            alert('⚠️ 战斗正在进行中！');
+            this.showModalBox('提示', '⚠️ 战斗正在进行中！');
             return;
         }
         
@@ -2209,7 +2967,7 @@ class Game {
         if (!level) return;
         
         if (this.player.team.length === 0) {
-            alert('⚠️ 阵容为空！请先编辑阵容');
+            this.showModalBox('提示', '⚠️ 阵容为空！请先编辑阵容');
             this.showTeamEditor();
             return;
         }
@@ -2224,15 +2982,33 @@ class Game {
         
         const enemyTeam = level.enemies.map(e => ({ ...e, maxHp: e.hp, currentHp: e.hp }));
         
+        // 初始化计谋冷却（所有计谋初始可用）
+        const tacticsCooldown = {};
+        TACTICS_DATABASE.forEach(tactic => {
+            tacticsCooldown[tactic.id] = 0;
+        });
+        
+        // 初始化武将 MP（用于施展计谋）
+        const playerTeamWithMP = this.player.team.map(id => {
+            const hero = this.player.heroes.find(h => h.id === id);
+            if (hero) {
+                // 根据智力决定 MP 上限
+                const baseHero = HERO_DATABASE.find(h => h.id === id);
+                const maxMP = baseHero ? Math.floor(baseHero.hp * 0.3) : 100;
+                return { ...hero, currentHp: hero.hp, mp: maxMP, maxMP: maxMP };
+            }
+            return null;
+        }).filter(h => h);
+        
         this.state.battle = {
             turn: 1,
             level: level,
-            playerTeam: this.player.team.map(id => {
-                const hero = this.player.heroes.find(h => h.id === id);
-                return hero ? { ...hero, currentHp: hero.hp } : null;
-            }).filter(h => h),
+            playerTeam: playerTeamWithMP,
             enemyTeam: enemyTeam,
-            log: [`📜 ${level.story}`, `战斗开始！`]
+            log: [`📜 ${level.story}`, `战斗开始！`],
+            tacticsCooldown: tacticsCooldown,  // 计谋冷却状态
+            activeBuffs: [],  // 玩家方的增益效果
+            activeDebuffs: []  // 敌方的减益效果
         };
         
         this.battleRunning = true;
@@ -2301,6 +3077,12 @@ class Game {
         setTimeout(() => {
             if (!this.battleRunning || !this.state.battle) return;
             
+            // 敌人 AI 使用计谋（有一定概率）
+            const enemyUseTacticChance = 0.3; // 30% 概率使用计谋
+            if (Math.random() < enemyUseTacticChance) {
+                this.enemyUseTacticAI();
+            }
+            
             const alivePlayersAfterAttack = this.state.battle.playerTeam.filter(p => p.currentHp > 0);
             for (const enemy of this.state.battle.enemyTeam) {
                 if (enemy.currentHp <= 0) continue;
@@ -2338,7 +3120,36 @@ class Game {
                     return;
                 }
                 
+                // 新回合开始
                 this.state.battle.turn++;
+                
+                // 减少计谋冷却
+                Object.keys(this.state.battle.tacticsCooldown).forEach(tacticId => {
+                    if (this.state.battle.tacticsCooldown[tacticId] > 0) {
+                        this.state.battle.tacticsCooldown[tacticId]--;
+                    }
+                });
+                
+                // 处理 buff 持续时间
+                this.state.battle.activeBuffs = this.state.battle.activeBuffs.filter(buff => {
+                    buff.duration--;
+                    return buff.duration > 0;
+                });
+                
+                // 处理 debuff 效果（中毒）
+                this.state.battle.activeDebuffs.forEach(debuff => {
+                    if (debuff.type === 'poison' && debuff.duration > 0) {
+                        const enemy = this.state.battle.enemyTeam.find(e => e.name === debuff.target);
+                        if (enemy && enemy.currentHp > 0) {
+                            const poisonDamage = Math.floor(enemy.maxHp * debuff.value);
+                            enemy.currentHp = Math.max(0, enemy.currentHp - poisonDamage);
+                            this.state.battle.log.push(`☠️ ${enemy.name} 中毒损失 ${poisonDamage} 点生命值！`);
+                        }
+                    }
+                    debuff.duration--;
+                });
+                this.state.battle.activeDebuffs = this.state.battle.activeDebuffs.filter(d => d.duration > 0);
+                
                 this.renderBattle();
             }, 800);
         }, 600);
@@ -2429,9 +3240,17 @@ class Game {
             }
         }
         
-        if (!this.player.passedLevels.includes(level.id)) {
-            this.player.passedLevels.push(level.id);
-            this.player.currentLevel = level.id + 1;
+        // 挂机模式下不更新 currentLevel，只在非挂机模式下更新
+        if (!this.autoBattle) {
+            if (!this.player.passedLevels.includes(level.id)) {
+                this.player.passedLevels.push(level.id);
+                this.player.currentLevel = level.id + 1;
+            }
+        } else {
+            // 挂机模式：只标记已通过，但不改变 currentLevel
+            if (!this.player.passedLevels.includes(level.id)) {
+                this.player.passedLevels.push(level.id);
+            }
         }
         
         this.updateDailyQuest('battle_win');
@@ -2473,12 +3292,13 @@ class Game {
                     rewardText += `\n⚔️ 装备：${equip.name}（${QUALITY_NAMES[equip.quality]}）x1`;
                 }
             }
-            alert(rewardText);
             
-            // 如果挂机模式开启，自动挑战下一关
-            // 注意：只在主页且没有其他弹窗时才开始自动战斗
-            if (this.autoBattle && this.player.currentLevel <= LEVELS.length) {
-                // 给玩家一个提示，然后开始下一关
+            // 显示自定义胜利弹窗（1 秒后自动关闭）
+            this.showVictoryModal(rewardText);
+            
+            // 如果挂机模式开启，自动在当前关卡重复战斗
+            if (this.autoBattle) {
+                // 给玩家一个提示，然后重新开始当前关卡
                 setTimeout(() => {
                     // 检查是否还在主页，如果不在主页则不自动开始战斗
                     const currentScreen = document.querySelector('.screen.active');
@@ -2487,14 +3307,229 @@ class Game {
                         return;
                     }
                     
-                    const nextLevel = LEVELS.find(l => l.id === this.player.currentLevel);
-                    if (nextLevel) {
-                        console.log(`🤖 挂机模式：开始挑战 ${nextLevel.name}`);
-                        this.startLevel(this.player.currentLevel);
-                    }
+                    // 使用当前关卡 ID 重复挑战（而不是 this.player.currentLevel）
+                    console.log(`🤖 挂机模式：重复挑战 ${level.name} (关卡 ID: ${level.id})`);
+                    this.startLevel(level.id);
                 }, 300);
             }
         }, 100);
+    }
+    
+    // 显示胜利结算弹窗
+    showVictoryModal(message) {
+        // 创建模态框
+        const modal = document.createElement('div');
+        modal.id = 'victory-modal';
+        modal.className = 'modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: modalFadeIn 0.3s ease;
+        `;
+        
+        modal.innerHTML = `
+            <div style="
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 40px;
+                border-radius: 20px;
+                text-align: center;
+                color: white;
+                max-width: 400px;
+                box-shadow: 0 10px 40px rgba(102, 126, 234, 0.5);
+                animation: modalSlideIn 0.4s ease;
+            ">
+                <div style="font-size: 60px; margin-bottom: 20px; animation: victory-bounce 0.6s ease;">🎉</div>
+                <h2 style="font-size: 28px; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">战斗胜利</h2>
+                <div style="
+                    background: rgba(255, 255, 255, 0.15);
+                    padding: 20px;
+                    border-radius: 15px;
+                    margin-bottom: 20px;
+                    text-align: left;
+                    white-space: pre-wrap;
+                    line-height: 1.8;
+                    font-size: 16px;
+                    max-height: 300px;
+                    overflow-y: auto;
+                ">${message}</div>
+                <div style="font-size: 14px; opacity: 0.8;">
+                    <span id="countdown">3</span> 秒后自动关闭...
+                </div>
+            </div>
+        `;
+        
+        // 添加 CSS 动画
+        if (!document.getElementById('victory-modal-style')) {
+            const style = document.createElement('style');
+            style.id = 'victory-modal-style';
+            style.innerHTML = `
+                @keyframes modalFadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes modalSlideIn {
+                    from {
+                        transform: translateY(-50px);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                }
+                @keyframes victory-bounce {
+                    0% { transform: scale(0); }
+                    50% { transform: scale(1.2); }
+                    100% { transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(modal);
+        
+        // 倒计时关闭
+        let countdown = 3;
+        const countdownEl = document.getElementById('countdown');
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            if (countdownEl) {
+                countdownEl.textContent = countdown;
+            }
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                modal.style.animation = 'modalFadeIn 0.3s ease reverse';
+                setTimeout(() => modal.remove(), 300);
+            }
+        }, 1000);
+        
+        // 点击模态框也可以立即关闭
+        modal.addEventListener('click', () => {
+            clearInterval(countdownInterval);
+            modal.style.animation = 'modalFadeIn 0.3s ease reverse';
+            setTimeout(() => modal.remove(), 300);
+        });
+    }
+    
+    // 通用自定义模态框（替代 alert）
+    showModalBox(title, message, autoClose = false, closeDelay = 3000) {
+        // 快速调用：如果只有一个参数，当作 message 处理
+        if (arguments.length === 1) {
+            message = title;
+            title = '';
+        }
+        
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: modalFadeIn 0.3s ease;
+            cursor: pointer;
+        `;
+        
+        const isSuccess = !message.includes('❌') && !message.includes('失败') && !message.includes('不足') && !message.includes('⚠️');
+        const gradient = isSuccess ? 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)' : 'linear-gradient(135deg, #f45c43 0%, #eb3349 100%)';
+        
+        modal.innerHTML = `
+            <div style="
+                background: ${gradient};
+                padding: 30px;
+                border-radius: 20px;
+                text-align: center;
+                color: white;
+                max-width: 450px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+                animation: modalSlideIn 0.4s ease;
+                position: relative;
+            ">
+                <div style="font-size: 50px; margin-bottom: 15px;">${isSuccess ? '✅' : '⚠️'}</div>
+                ${title ? `<h3 style="font-size: 24px; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">${title}</h3>` : ''}
+                <div style="
+                    background: rgba(255, 255, 255, 0.15);
+                    padding: 15px;
+                    border-radius: 10px;
+                    white-space: pre-wrap;
+                    line-height: 1.6;
+                    font-size: 15px;
+                    max-height: 350px;
+                    overflow-y: auto;
+                    text-align: left;
+                ">${message}</div>
+                ${autoClose ? `<div style="font-size: 13px; opacity: 0.9; margin-top: 15px;">
+                    <span class="modal-countdown">${closeDelay / 1000}</span> 秒后自动关闭...
+                </div>` : '<div style="font-size: 13px; opacity: 0.9; margin-top: 15px;">点击任意位置关闭</div>'}
+            </div>
+        `;
+        
+        // 添加 CSS 动画（如果不存在）
+        if (!document.getElementById('modal-box-style')) {
+            const style = document.createElement('style');
+            style.id = 'modal-box-style';
+            style.innerHTML = `
+                @keyframes modalFadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes modalSlideIn {
+                    from {
+                        transform: translateY(-50px);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(modal);
+        
+        const closeModal = () => {
+            modal.style.animation = 'modalFadeIn 0.3s ease reverse';
+            setTimeout(() => modal.remove(), 300);
+        };
+        
+        modal.addEventListener('click', closeModal);
+        
+        // 如果需要自动关闭
+        if (autoClose) {
+            let countdown = closeDelay / 1000;
+            const countdownEl = modal.querySelector('.modal-countdown');
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdownEl) {
+                    countdownEl.textContent = countdown;
+                }
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    closeModal();
+                }
+            }, 1000);
+        }
+    }
+    
+    // 快速提示（替代简单 alert）
+    showToast(message, duration = 2000) {
+        this.showModalBox('', message, true, duration);
     }
     
     loseBattle() {
@@ -2520,7 +3555,7 @@ class Game {
         
         // 延迟显示失败信息
         setTimeout(() => {
-            alert('❌ 战斗失败！请强化武将后再来挑战！');
+            this.showModalBox('战斗失败', '❌ 战斗失败！请强化武将后再来挑战！');
         }, 100);
     }
     
@@ -2542,7 +3577,9 @@ class Game {
             console.log('⏸️ 退出战斗，已关闭挂机模式');
         }
         
-        if (isRun) alert('🏃 逃跑成功！');
+        if (isRun) {
+            this.showModalBox('逃跑', '🏃 逃跑成功！', true, 2000);
+        }
         this.state.battle = null;
         this.showScreen('home');
     }
@@ -2572,10 +3609,14 @@ class Game {
                     ${battle.playerTeam.map((h, index) => `
                         <div id="player-${index}" style="background: linear-gradient(135deg, #3498db, #2980b9); padding: 15px; border-radius: 10px; min-width: 150px; text-align: center; position: relative; transition: all 0.3s; box-shadow: 0 5px 15px rgba(52,152,219,0.4);">
                             <div style="font-size: 20px; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">⚔️ ${h.name} Lv.${h.level || 1}</div>
-                            <div style="background: #333; height: 15px; border-radius: 8px; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); position: relative;">
+                            <div style="background: #333; height: 15px; border-radius: 8px; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); position: relative; margin-bottom: 5px;">
                                 <div class="hp-bar" style="background: linear-gradient(90deg, #2ecc71, #27ae60); height: 100%; width: ${(h.currentHp / h.hp) * 100}%; transition: width 0.5s ease-out; position: absolute;"></div>
                             </div>
                             <div class="hp-text" style="margin-top: 5px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">${Math.ceil(h.currentHp)}/${h.hp}</div>
+                            <div style="background: #333; height: 10px; border-radius: 5px; overflow: hidden; box-shadow: inset 0 2px 3px rgba(0,0,0,0.5); position: relative; margin-top: 8px;">
+                                <div class="mp-bar" style="background: linear-gradient(90deg, #3498db, #2980b9); height: 100%; width: ${(h.mp / h.maxMP) * 100}%; transition: width 0.5s ease-out; position: absolute;"></div>
+                            </div>
+                            <div style="margin-top: 3px; font-size: 12px; color: #3498db; font-weight: bold;">MP: ${h.mp}/${h.maxMP}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -2587,6 +3628,34 @@ class Game {
                         </div>
                     </div>
                 </div>
+                
+                <!-- 计谋策略系统 -->
+                <div style="margin-top: 25px; padding: 20px; background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2)); border-radius: 15px; border: 2px solid rgba(102,126,234,0.5);">
+                    <h3 style="text-align: center; margin-bottom: 15px; color: #667eea; text-shadow: 0 0 10px rgba(102,126,234,0.8);">🎯 计谋策略</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; max-height: 250px; overflow-y: auto; padding: 10px;">
+                        ${TACTICS_DATABASE.map(tactic => {
+                            const cooldown = battle.tacticsCooldown[tactic.id] || 0;
+                            const isReady = cooldown <= 0;
+                            return `
+                                <div onclick="game.useTactic('${tactic.id}')" 
+                                    style="background: linear-gradient(135deg, ${isReady ? 'rgba(46,204,113,0.3)' : 'rgba(149,165,166,0.3)'} 0%, rgba(0,0,0,0.5) 100%); 
+                                    padding: 12px; border-radius: 10px; text-align: center; color: white; 
+                                    cursor: ${isReady ? 'pointer' : 'not-allowed'}; 
+                                    border: 2px solid ${isReady ? '#2ecc71' : '#95a5a6'};
+                                    transition: all 0.3s;
+                                    position: relative;
+                                    ${!isReady ? 'filter: grayscale(0.8);' : ''}"
+                                    title="${tactic.effect}">
+                                    <div style="font-size: 28px; margin-bottom: 5px;">${tactic.icon}</div>
+                                    <div style="font-weight: bold; font-size: 13px; margin-bottom: 3px;">${tactic.name}</div>
+                                    <div style="font-size: 11px; opacity: 0.8;">CD: ${tactic.cooldown}</div>
+                                    ${!isReady ? `<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; font-weight: bold; color: #e74c3c; text-shadow: 0 0 5px black;">${cooldown}</div>` : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                
                 <div style="margin-top: 30px; text-align: center;">
                     <button class="btn btn-danger" onclick="game.endBattle(true)" style="box-shadow: 0 5px 15px rgba(231,76,60,0.4); transition: all 0.3s; transform: scale(1);">🏃 逃跑</button>
                     <button class="btn btn-success" onclick="game.toggleAutoBattle()" id="auto-battle-btn" style="box-shadow: 0 5px 15px rgba(46,204,113,0.4); transition: all 0.3s; margin-left: 10px; transform: scale(1);">🤖 挂机：${this.autoBattle ? '开' : '关'}</button>
@@ -2718,6 +3787,470 @@ class Game {
         this.showNotification(`⚡ 战斗速度：${this.battleSpeed}x`, 'info', 2000);
     }
     
+    // 使用计谋
+    useTactic(tacticId) {
+        if (!this.state.battle || !this.battleRunning) {
+            this.showToast('⚠️ 不在战斗中');
+            return;
+        }
+        
+        const tactic = TACTICS_DATABASE.find(t => t.id === tacticId);
+        if (!tactic) {
+            this.showToast('❌ 无效的计谋');
+            return;
+        }
+        
+        // 检查冷却
+        const cooldown = this.state.battle.tacticsCooldown[tacticId] || 0;
+        if (cooldown > 0) {
+            this.showToast(`⚠️ 计谋正在冷却中（${cooldown}回合）`);
+            return;
+        }
+        
+        // 检查 MP（选择 MP 最多的武将施放）
+        const battle = this.state.battle;
+        const alivePlayers = battle.playerTeam.filter(p => p.currentHp > 0);
+        if (alivePlayers.length === 0) {
+            this.showToast('❌ 没有可施放计谋的武将');
+            return;
+        }
+        
+        // 找到 MP 最多的武将
+        const caster = alivePlayers.reduce((max, p) => p.mp > max.mp ? p : max, alivePlayers[0]);
+        if (caster.mp < tactic.mpCost) {
+            this.showToast(`⚠️ MP 不足！需要 ${tactic.mpCost}，当前 ${caster.mp}`);
+            return;
+        }
+        
+        let used = false;
+        
+        // 根据计谋类型执行不同效果
+        switch (tactic.type) {
+            case 'damage':
+                used = this.executeDamageTactic(tactic, battle);
+                break;
+            case 'heal':
+                used = this.executeHealTactic(tactic, battle);
+                break;
+            case 'confuse':
+                used = this.executeConfuseTactic(tactic, battle);
+                break;
+            case 'assassinate':
+                used = this.executeAssassinateTactic(tactic, battle);
+                break;
+            case 'revive':
+                used = this.executeReviveTactic(tactic, battle);
+                break;
+            case 'escape':
+                used = this.executeEscapeTactic(tactic, battle);
+                break;
+            case '叛离':
+                used = this.executeConfuseTactic(tactic, battle);
+                break;
+        }
+        
+        if (used) {
+            // 扣除 MP
+            caster.mp -= tactic.mpCost;
+            
+            // 设置冷却时间
+            this.state.battle.tacticsCooldown[tacticId] = tactic.cooldown;
+            
+            // 播放计谋动画
+            this.showTacticAnim(tactic);
+            
+            // 立即更新战斗界面
+            this.renderBattle();
+        }
+    }
+    
+    // 执行伤害类计谋（火、水、石系）
+    executeDamageTactic(tactic, battle) {
+        const caster = this.findHighestMPAlly(battle);
+        
+        if (tactic.target === 'single_enemy') {
+            const aliveEnemies = battle.enemyTeam.filter(e => e.currentHp > 0);
+            if (aliveEnemies.length === 0) return false;
+            
+            // 选择目标（随机）
+            const target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+            
+            // 计算伤害（基础伤害 + 智力加成）
+            const intelligence = caster.intelligence || 100;
+            const damage = Math.floor(tactic.damageBase * (1 + intelligence / 200));
+            
+            target.currentHp = Math.max(0, target.currentHp - damage);
+            battle.log.push(`🔥 使用【${tactic.name}】！对 ${target.name} 造成 ${damage} 点伤害！`);
+            
+            // 检查是否击败敌人
+            if (target.currentHp <= 0) {
+                battle.log.push(`💀 ${target.name} 被击败了！`);
+            }
+        }
+        
+        return true;
+    }
+    
+    // 执行治疗类计谋
+    executeHealTactic(tactic, battle) {
+        const caster = this.findHighestMPAlly(battle);
+        
+        if (tactic.target === 'single_ally') {
+            const alivePlayers = battle.playerTeam.filter(p => p.currentHp > 0);
+            if (alivePlayers.length === 0) return false;
+            
+            // 选择血量最低的武将
+            const target = alivePlayers.reduce((min, p) => 
+                (p.currentHp / p.hp) < (min.currentHp / min.hp) ? p : min, alivePlayers[0]);
+            
+            const heal = tactic.healBase;
+            target.currentHp = Math.min(target.hp, target.currentHp + heal);
+            battle.log.push(`💚 使用【${tactic.name}】！为 ${target.name} 恢复 ${heal} 点兵力！`);
+        }
+        
+        return true;
+    }
+    
+    // 执行离间类计谋
+    executeConfuseTactic(tactic, battle) {
+        const caster = this.findHighestMPAlly(battle);
+        
+        const aliveEnemies = battle.enemyTeam.filter(e => e.currentHp > 0);
+        if (aliveEnemies.length === 0) return false;
+        
+        const target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+        
+        // 检查是否免疫（BOSS 级敌人有一定几率免疫）
+        const immuneChance = target.isBoss ? 0.5 : 0.1;
+        if (Math.random() < immuneChance) {
+            battle.log.push(`❌ ${target.name} 免疫了【${tactic.name}】！`);
+            return false;
+        }
+        
+        battle.activeDebuffs.push({
+            type: tactic.debuffType,
+            duration: tactic.debuffDuration,
+            target: target.name
+        });
+        
+        battle.log.push(`✨ 使用【${tactic.name}】！${target.name} 中计了！`);
+        return true;
+    }
+    
+    // 执行暗杀计
+    executeAssassinateTactic(tactic, battle) {
+        const caster = this.findHighestMPAlly(battle);
+        
+        const aliveEnemies = battle.enemyTeam.filter(e => e.currentHp > 0);
+        if (aliveEnemies.length === 0) return false;
+        
+        const target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+        
+        // 暗杀成功率（对 BOSS 极低）
+        const successRate = target.isBoss ? 0.1 : 0.6;
+        
+        if (Math.random() < successRate) {
+            target.currentHp = 0;
+            battle.log.push(`🗡️ 使用【${tactic.name}】！${target.name} 被秒杀了！`);
+        } else {
+            battle.log.push(`❌ 使用【${tactic.name}】！对 ${target.name} 失败了！`);
+        }
+        
+        return true;
+    }
+    
+    // 执行复活类计谋
+    executeReviveTactic(tactic, battle) {
+        const caster = this.findHighestMPAlly(battle);
+        
+        const deadPlayers = battle.playerTeam.filter(p => p.currentHp <= 0);
+        if (deadPlayers.length === 0) {
+            battle.log.push(`⚠️ 没有可复活的武将！`);
+            return false;
+        }
+        
+        const target = deadPlayers[0];
+        const reviveHp = Math.floor(target.hp * tactic.revivePercent);
+        target.currentHp = reviveHp;
+        
+        battle.log.push(`✨ 使用【${tactic.name}】！复活了 ${target.name}，恢复 ${reviveHp} 点兵力！`);
+        return true;
+    }
+    
+    // 执行逃跑类计谋
+    executeEscapeTactic(tactic, battle) {
+        const caster = this.findHighestMPAlly(battle);
+        
+        if (tactic.id === 'yan_dun') {
+            // 烟遁计必定成功
+            battle.log.push(`💨 使用【${tactic.name}】！成功逃脱！`);
+            setTimeout(() => {
+                this.endBattle(true);
+            }, 1000);
+            return true;
+        } else if (tactic.id === 'xue_lu') {
+            // 血路计有成功率
+            const successRate = 0.7;
+            if (Math.random() < successRate) {
+                battle.log.push(`🏃 使用【${tactic.name}】！杀出重围，成功逃脱！`);
+                setTimeout(() => {
+                    this.endBattle(true);
+                }, 1000);
+                return true;
+            } else {
+                battle.log.push(`❌ 使用【${tactic.name}】！逃脱失败！`);
+                return false;
+            }
+        }
+        
+        return false;
+    }
+    
+    // 找到 MP 最高的盟友
+    findHighestMPAlly(battle) {
+        const alivePlayers = battle.playerTeam.filter(p => p.currentHp > 0);
+        if (alivePlayers.length === 0) return null;
+        return alivePlayers.reduce((max, p) => p.mp > max.mp ? p : max, alivePlayers[0]);
+    }
+    
+    // 敌人 AI 使用计谋
+    enemyUseTacticAI() {
+        const battle = this.state.battle;
+        if (!battle) return;
+        
+        // 找到智力最高的敌人作为施法者
+        const aliveEnemies = battle.enemyTeam.filter(e => e.currentHp > 0);
+        if (aliveEnemies.length === 0) return;
+        
+        const caster = aliveEnemies.reduce((max, e) => {
+            const int = e.intelligence || 0;
+            const maxInt = max.intelligence || 0;
+            return int > maxInt ? e : max;
+        }, aliveEnemies[0]);
+        
+        // 根据敌人智力决定可用的计谋等级
+        const intelligence = caster.intelligence || 50;
+        const availableTactics = TACTICS_DATABASE.filter(t => t.levelReq <= Math.floor(intelligence / 10));
+        
+        if (availableTactics.length === 0) return;
+        
+        // 随机选择一个计谋
+        const tactic = availableTactics[Math.floor(Math.random() * availableTactics.length)];
+        
+        const alivePlayers = battle.playerTeam.filter(p => p.currentHp > 0);
+        if (alivePlayers.length === 0) return;
+        
+        // 根据计谋类型执行
+        let used = false;
+        
+        if (tactic.type === 'damage') {
+            // 伤害类计谋
+            const target = alivePlayers[Math.floor(Math.random() * alivePlayers.length)];
+            const damage = Math.floor(tactic.damageBase * (1 + intelligence / 200));
+            target.currentHp = Math.max(0, target.currentHp - damage);
+            battle.log.push(`🔥 敌方 ${caster.name} 使用【${tactic.name}】！对 ${target.name} 造成 ${damage} 点伤害！`);
+            used = true;
+        } else if (tactic.type === 'heal') {
+            // 治疗类计谋（对敌方使用）
+            const lowHpEnemy = aliveEnemies.reduce((min, e) => 
+                (e.currentHp / e.maxHp) < (min.currentHp / min.maxHp) ? e : min, aliveEnemies[0]);
+            
+            const heal = tactic.healBase;
+            lowHpEnemy.currentHp = Math.min(lowHpEnemy.maxHp, lowHpEnemy.currentHp + heal);
+            battle.log.push(`💚 敌方 ${caster.name} 使用【${tactic.name}】！为 ${lowHpEnemy.name} 恢复 ${heal} 点兵力！`);
+            used = true;
+        } else if (tactic.type === 'confuse' || tactic.type === '叛离') {
+            // 离间类计谋（对玩家方使用）
+            const target = alivePlayers[Math.floor(Math.random() * alivePlayers.length)];
+            const immuneChance = target.isBoss ? 0.5 : 0.1;
+            
+            if (Math.random() >= immuneChance) {
+                battle.activeDebuffs.push({
+                    type: tactic.debuffType,
+                    duration: tactic.debuffDuration,
+                    target: target.name,
+                    isEnemy: true
+                });
+                battle.log.push(`✨ 敌方 ${caster.name} 使用【${tactic.name}】！${target.name} 中计了！`);
+                used = true;
+            } else {
+                battle.log.push(`❌ 敌方 ${caster.name} 使用【${tactic.name}】！被 ${target.name} 免疫了！`);
+                used = false;
+            }
+        }
+        
+        if (used) {
+            // 播放计谋动画
+            this.showTacticAnim(tactic, true);
+            // 更新战斗界面
+            this.renderBattle();
+        }
+    }
+    
+    // 执行增益类计谋
+    executeBuffTactic(tactic) {
+        const battle = this.state.battle;
+        const alivePlayers = battle.playerTeam.filter(p => p.currentHp > 0);
+        if (alivePlayers.length === 0) return false;
+        
+        // 添加增益效果
+        battle.activeBuffs.push({
+            type: tactic.buffType,
+            value: tactic.buffValue,
+            duration: tactic.buffDuration,
+            targets: alivePlayers.map(p => p.id)
+        });
+        
+        // 立即应用增益
+        alivePlayers.forEach(player => {
+            if (tactic.buffType === 'attack') {
+                player.attack = Math.floor(player.attack * (1 + tactic.buffValue));
+            } else if (tactic.buffType === 'defense') {
+                player.defense = Math.floor(player.defense * (1 + tactic.buffValue));
+            } else if (tactic.buffType === 'speed') {
+                player.speed = Math.floor(player.speed * (1 + tactic.buffValue));
+            }
+        });
+        
+        battle.log.push(`💪 使用【${tactic.name}】！全体武将${tactic.buffType === 'attack' ? '攻击力' : tactic.buffType === 'defense' ? '防御力' : '速度'}提升 ${Math.floor(tactic.buffValue * 100)}%，持续 ${tactic.buffDuration} 回合！`);
+        return true;
+    }
+    
+    // 执行减益类计谋
+    executeDebuffTactic(tactic) {
+        const battle = this.state.battle;
+        const aliveEnemies = battle.enemyTeam.filter(e => e.currentHp > 0);
+        if (aliveEnemies.length === 0) return false;
+        
+        if (tactic.target === 'single_enemy') {
+            const target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+            
+            battle.activeDebuffs.push({
+                type: tactic.debuffType,
+                value: tactic.debuffValue,
+                duration: tactic.debuffDuration,
+                target: target.name
+            });
+            
+            if (tactic.debuffType === 'poison') {
+                // 中毒效果会在每回合自动扣血
+                battle.log.push(`☠️ 使用【${tactic.name}】！${target.name} 中毒，每回合损失 ${Math.floor(tactic.debuffValue * 100)}% 生命值，持续 ${tactic.debuffDuration} 回合！`);
+            } else if (tactic.debuffType === 'attack_down') {
+                target.attack = Math.floor(target.attack * (1 - tactic.debuffValue));
+                battle.log.push(`📉 使用【${tactic.name}】！${target.name} 攻击力降低 ${Math.floor(tactic.debuffValue * 100)}%，持续 ${tactic.debuffDuration} 回合！`);
+            }
+        }
+        
+        return true;
+    }
+    
+    // 执行复活类计谋
+    executeReviveTactic(tactic) {
+        const battle = this.state.battle;
+        const deadPlayers = battle.playerTeam.filter(p => p.currentHp <= 0);
+        if (deadPlayers.length === 0) {
+            this.showToast('⚠️ 没有可复活的武将');
+            return false;
+        }
+        
+        const target = deadPlayers[0];
+        const reviveHp = Math.floor(target.hp * tactic.revivePercent);
+        target.currentHp = reviveHp;
+        
+        battle.log.push(`✨ 使用【${tactic.name}】！复活了 ${target.name}，恢复 ${reviveHp} 点生命值！`);
+        return true;
+    }
+    
+    // 执行终极计谋
+    executeUltimateTactic(tactic, battle) {
+        let totalDamage = 0;
+        battle.enemyTeam.forEach(enemy => {
+            if (enemy.currentHp > 0) {
+                enemy.currentHp = Math.max(0, enemy.currentHp - tactic.damageBase);
+                totalDamage += tactic.damageBase;
+            }
+        });
+        
+        battle.log.push(`🌟 使用【${tactic.name}】！对全体敌人造成 ${totalDamage} 点巨额伤害！`);
+        return true;
+    }
+    
+    // 执行士气降低计谋
+    executeMoraleDownTactic(tactic, battle) {
+        const aliveEnemies = battle.enemyTeam.filter(e => e.currentHp > 0);
+        if (aliveEnemies.length === 0) return false;
+        
+        const target = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+        // 简化处理：士气降低相当于降低攻击力
+        if (!target.moraleDown) target.moraleDown = 0;
+        target.moraleDown += tactic.moraleDamage;
+        target.attack = Math.max(1, target.attack - Math.floor(tactic.moraleDamage * 0.5));
+        
+        battle.log.push(`💢 使用【${tactic.name}】！${target.name} 士气降低 ${tactic.moraleDamage} 点！`);
+        return true;
+    }
+    
+    // 执行士气提升计谋
+    executeMoraleUpTactic(tactic, battle) {
+        if (tactic.target === 'all_allies') {
+            battle.playerTeam.forEach(player => {
+                if (player.currentHp > 0) {
+                    if (!player.moraleUp) player.moraleUp = 0;
+                    player.moraleUp += tactic.moraleBoost;
+                    player.attack = Math.floor(player.attack * 1.1);
+                }
+            });
+            battle.log.push(`🎵 使用【${tactic.name}】！全体武将士气提升 ${tactic.moraleBoost} 点！`);
+        } else if (tactic.target === 'single_ally') {
+            const alivePlayers = battle.playerTeam.filter(p => p.currentHp > 0);
+            if (alivePlayers.length === 0) return false;
+            const target = alivePlayers[Math.floor(Math.random() * alivePlayers.length)];
+            if (!target.moraleUp) target.moraleUp = 0;
+            target.moraleUp += tactic.moraleBoost;
+            target.attack = Math.floor(target.attack * 1.15);
+            battle.log.push(`💪 使用【${tactic.name}】！${target.name} 士气提升 ${tactic.moraleBoost} 点！`);
+        }
+        
+        return true;
+    }
+    
+    // 显示计谋动画
+    showTacticAnim(tactic, isEnemy = false) {
+        const container = document.getElementById('battle-container');
+        if (!container) return;
+        
+        // 创建动画元素
+        const anim = document.createElement('div');
+        anim.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 100px;
+            z-index: 1000;
+            animation: tactic-anim 1s ease-out;
+            pointer-events: none;
+        `;
+        anim.textContent = tactic.icon;
+        
+        // 添加 CSS 动画
+        if (!document.getElementById('tactic-anim-style')) {
+            const style = document.createElement('style');
+            style.id = 'tactic-anim-style';
+            style.innerHTML = `
+                @keyframes tactic-anim {
+                    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+                    50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+                    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        container.appendChild(anim);
+        setTimeout(() => anim.remove(), 1000);
+    }
+    
     showNotification(message, type = 'info', duration = 3000) {
         // 移除旧的通知
         const oldNotification = document.getElementById('game-notification');
@@ -2750,9 +4283,92 @@ class Game {
     
     showSummon() {
         this.showModal('summon-modal');
+        this.renderSummonPool();
     }
     
-    summon(count) {
+    // 渲染武将池
+    renderSummonPool() {
+        const poolDiv = document.getElementById('summon-pool');
+        if (!poolDiv) return;
+        
+        // 按稀有度分组统计
+        const poolStats = {
+            UR: HERO_DATABASE.filter(h => h.rarity === 'UR').length,
+            SSR: HERO_DATABASE.filter(h => h.rarity === 'SSR').length,
+            SR: HERO_DATABASE.filter(h => h.rarity === 'SR').length,
+            R: HERO_DATABASE.filter(h => h.rarity === 'R').length
+        };
+        
+        let html = `
+            <div style="margin-bottom: 20px;">
+                <h4 style="margin-bottom: 10px;">📊 武将池统计</h4>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <div style="background: linear-gradient(135deg, #E91E63, #333); padding: 10px 20px; border-radius: 10px; color: white; text-align: center;">
+                        <div style="font-size: 20px; font-weight: bold;">UR</div>
+                        <div style="font-size: 14px;">${poolStats.UR} 人</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #FF9800, #333); padding: 10px 20px; border-radius: 10px; color: white; text-align: center;">
+                        <div style="font-size: 20px; font-weight: bold;">SSR</div>
+                        <div style="font-size: 14px;">${poolStats.SSR} 人</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #2196F3, #333); padding: 10px 20px; border-radius: 10px; color: white; text-align: center;">
+                        <div style="font-size: 20px; font-weight: bold;">SR</div>
+                        <div style="font-size: 14px;">${poolStats.SR} 人</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #4CAF50, #333); padding: 10px 20px; border-radius: 10px; color: white; text-align: center;">
+                        <div style="font-size: 20px; font-weight: bold;">R</div>
+                        <div style="font-size: 14px;">${poolStats.R} 人</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h4 style="margin: 0;">🎴 武将池详情（${HERO_DATABASE.length}人）</h4>
+                    <button id="toggle-pool-btn" onclick="game.toggleSummonPool()" class="btn btn-sm" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 8px 20px; font-size: 14px;">
+                        👁️ 查看详情
+                    </button>
+                </div>
+                <div id="summon-pool-detail" style="display: none;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; max-height: 400px; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 10px;">
+                        ${HERO_DATABASE.map(hero => {
+                            const rarity = RARITY[hero.rarity];
+                            return `
+                                <div style="background: linear-gradient(135deg, ${rarity.color}, #333); padding: 10px; border-radius: 8px; text-align: center; color: white; border: 2px solid ${rarity.color};">
+                                    <div style="font-size: 24px;">${hero.icon}</div>
+                                    <div style="font-weight: bold; font-size: 14px; margin: 5px 0;">${hero.name}</div>
+                                    <div style="font-size: 11px; opacity: 0.8;">${hero.title}</div>
+                                    <div style="font-size: 10px; margin-top: 3px; background: rgba(255,255,255,0.2); padding: 2px 5px; border-radius: 10px; display: inline-block;">${hero.rarity}</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        poolDiv.innerHTML = html;
+    }
+    
+    // 切换武将池详情显示/隐藏
+    toggleSummonPool() {
+        const detailDiv = document.getElementById('summon-pool-detail');
+        const toggleBtn = document.getElementById('toggle-pool-btn');
+        
+        if (!detailDiv || !toggleBtn) return;
+        
+        if (detailDiv.style.display === 'none') {
+            detailDiv.style.display = 'block';
+            toggleBtn.innerHTML = '🔼 收起详情';
+            toggleBtn.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+        } else {
+            detailDiv.style.display = 'none';
+            toggleBtn.innerHTML = '👁️ 查看详情';
+            toggleBtn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+        }
+    }
+    
+    async summon(count) {
         // 防抖检查：防止快速点击
         if (!this.canPerformAction('summon', 1000)) {
             console.log('⚠️ 招募操作过于频繁，请稍后再试');
@@ -2761,12 +4377,12 @@ class Game {
         
         const cost = count * 100;
         if (this.player.gem < cost) {
-            alert(`❌ 元宝不足！需要 ${cost} 元宝`);
+            this.showModalBox('元宝不足', `❌ 元宝不足！需要 ${cost} 元宝`);
             return;
         }
         
         // 检查武将数量，如果过多则提示
-        const maxHeroes = 50; // 设置最大武将数量
+        const maxHeroes = 50;
         if (this.player.heroes.length + count > maxHeroes) {
             const confirmSummon = confirm(
                 `⚠️ 武将数量过多！\n\n` +
@@ -2781,11 +4397,16 @@ class Game {
         }
         
         this.player.gem -= cost;
-        const results = [];
+        this.updateResourceDisplay();
         
         console.log(`🎴 开始招募 ${count} 名武将`);
         console.log(`  - 消耗元宝：${cost}`);
         console.log(`  - 招募前武将数量：${this.player.heroes.length}`);
+        
+        // 显示抽卡动画
+        await this.showSummonAnimation(count);
+        
+        const results = [];
         
         for (let i = 0; i < count; i++) {
             const rand = Math.random() * 100;
@@ -2800,7 +4421,6 @@ class Game {
             if (hero) {
                 const existing = this.player.heroes.find(h => h.id === hero.id);
                 if (existing) {
-                    // 重复武将：添加到武将列表（用于升星）
                     const dupeHero = { 
                         ...hero, 
                         level: 1,
@@ -2812,16 +4432,16 @@ class Game {
                             helmet: null,
                             boots: null
                         },
-                        isDupe: true  // 标记为重复武将
+                        isDupe: true
                     };
                     this.player.heroes.push(dupeHero);
-                    this.player.gold += 50;  // 额外奖励
+                    this.player.gold += 50;
                     results.push(dupeHero);
                 } else {
                     const newHero = { 
                         ...hero, 
                         level: 1,
-                        star: 0,  // 初始为 0 星
+                        star: 0,
                         currentHp: hero.hp,
                         equipment: {
                             weapon: null,
@@ -2839,24 +4459,96 @@ class Game {
         this.updateResourceDisplay();
         this.renderSummonResult(results);
         this.updateDailyQuest('summon');
+        this.saveGame();
+    }
+    
+    // 显示抽卡动画
+    showSummonAnimation(count) {
+        return new Promise((resolve) => {
+            const resultDiv = document.getElementById('summon-result');
+            if (!resultDiv) {
+                resolve();
+                return;
+            }
+            
+            // 显示动画容器
+            resultDiv.innerHTML = `
+                <div style="text-align: center; padding: 50px;">
+                    <div style="font-size: 60px; animation: summon-glow 1s ease-in-out infinite;">✨</div>
+                    <div style="font-size: 24px; margin-top: 20px; color: #f39c12;">正在招募武将...</div>
+                    <div style="font-size: 16px; margin-top: 10px; color: #999;">第 ${count} 次召唤</div>
+                </div>
+            `;
+            
+            // 添加 CSS 动画
+            if (!document.getElementById('summon-animation-style')) {
+                const style = document.createElement('style');
+                style.id = 'summon-animation-style';
+                style.innerHTML = `
+                    @keyframes summon-glow {
+                        0%, 100% { transform: scale(1); opacity: 1; filter: brightness(1); }
+                        50% { transform: scale(1.2); opacity: 0.8; filter: brightness(1.5); }
+                    }
+                    @keyframes card-flip {
+                        0% { transform: rotateY(0deg); opacity: 0; }
+                        50% { transform: rotateY(90deg); opacity: 0.5; }
+                        100% { transform: rotateY(0deg); opacity: 1; }
+                    }
+                    @keyframes rarity-glow {
+                        0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+                        50% { box-shadow: 0 0 40px rgba(255,255,255,0.8), 0 0 60px rgba(255,215,0,0.6); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // 延迟显示结果
+            setTimeout(() => {
+                resolve();
+            }, 1500);
+        });
     }
     
     renderSummonResult(results) {
         const resultDiv = document.getElementById('summon-result');
         if (!resultDiv) return;
         
+        // 统计稀有度
+        const rarityCount = { UR: 0, SSR: 0, SR: 0, R: 0 };
+        results.forEach(r => {
+            if (rarityCount[r.rarity] !== undefined) rarityCount[r.rarity]++;
+        });
+        
+        // 检查是否有高稀有度武将
+        const hasUR = rarityCount.UR > 0;
+        const hasSSR = rarityCount.SSR > 0;
+        
         resultDiv.innerHTML = `
-            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 20px;">
-                ${results.map(r => {
+            <div style="margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, ${hasUR ? '#E91E63' : hasSSR ? '#FF9800' : '#4CAF50'}, #333); border-radius: 15px; color: white; text-align: center; animation: rarity-glow 2s ease-in-out infinite;">
+                <div style="font-size: 20px; font-weight: bold;">🎉 招募完成！</div>
+                <div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px; font-size: 14px;">
+                    ${rarityCount.UR > 0 ? `<span style="background: rgba(233,30,99,0.5); padding: 5px 15px; border-radius: 20px;">UR: ${rarityCount.UR}</span>` : ''}
+                    ${rarityCount.SSR > 0 ? `<span style="background: rgba(255,152,0,0.5); padding: 5px 15px; border-radius: 20px;">SSR: ${rarityCount.SSR}</span>` : ''}
+                    ${rarityCount.SR > 0 ? `<span style="background: rgba(33,150,243,0.5); padding: 5px 15px; border-radius: 20px;">SR: ${rarityCount.SR}</span>` : ''}
+                    ${rarityCount.R > 0 ? `<span style="background: rgba(76,175,80,0.5); padding: 5px 15px; border-radius: 20px;">R: ${rarityCount.R}</span>` : ''}
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(${results.length > 5 ? 5 : results.length}, 1fr); gap: 15px; margin-top: 20px;">
+                ${results.map((r, index) => {
                     const rarity = RARITY[r.rarity];
                     const template = HERO_DATABASE.find(h => h.id === r.id) || r;
+                    const isHighRarity = r.rarity === 'UR' || r.rarity === 'SSR';
                     return `
-                        <div style="background: linear-gradient(135deg, ${rarity ? rarity.color : '#999'} 0%, #333 100%); padding: 15px; border-radius: 10px; text-align: center; color: white;">
-                            <div style="font-size: 36px; margin-bottom: 5px;">${template.icon || '⭐'}</div>
-                            <div style="font-size: 10px; color: rgba(255,255,255,0.7);">${template.title || ''}</div>
-                            <div style="font-size: 16px; font-weight: bold;">${r.name}</div>
-                            <div style="font-size: 12px; margin-top: 5px;">${r.rarity}</div>
-                            ${r.isDupe ? '<div style="font-size: 10px; color: #f39c12; margin-top: 5px;">+50 金币</div>' : ''}
+                        <div style="background: linear-gradient(135deg, ${rarity.color} 0%, #333 100%); padding: 20px; border-radius: 15px; text-align: center; color: white; animation: card-flip 0.6s ease-out ${index * 0.1}s both; ${isHighRarity ? 'border: 3px solid gold; box-shadow: 0 0 20px rgba(255,215,0,0.5);' : 'border: 2px solid rgba(255,255,255,0.3);'} position: relative; overflow: hidden;">
+                            ${isHighRarity ? '<div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,215,0,0.3) 0%, transparent 70%); animation: rarity-glow 2s ease-in-out infinite;"></div>' : ''}
+                            <div style="position: relative; z-index: 1;">
+                                <div style="font-size: 48px; margin-bottom: 10px; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));">${template.icon || '⭐'}</div>
+                                <div style="font-size: 12px; color: rgba(255,255,255,0.8); margin-bottom: 5px;">${template.title || ''}</div>
+                                <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">${r.name}</div>
+                                <div style="font-size: 14px; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 10px; display: inline-block;">${r.rarity}</div>
+                                ${r.isDupe ? '<div style="font-size: 12px; color: #f39c12; margin-top: 10px; font-weight: bold;">✨ 重复武将 +50 金币</div>' : ''}
+                            </div>
                         </div>
                     `;
                 }).join('')}
@@ -2999,7 +4691,7 @@ class Game {
     
     addToTeam(heroId) {
         if (this.player.team.length >= 5) {
-            alert('⚠️ 阵容已满 (5 人)');
+            this.showToast('⚠️ 阵容已满 (5 人)');
             return;
         }
         if (!this.player.team.includes(heroId)) {
@@ -3018,7 +4710,7 @@ class Game {
     // 一键上阵：自动选择战力最强的 5 个武将
     autoSelectTeam() {
         if (this.player.heroes.length === 0) {
-            alert('⚠️ 没有可上阵的武将！');
+            this.showToast('⚠️ 没有可上阵的武将！');
             return;
         }
         
@@ -3044,7 +4736,7 @@ class Game {
             return hero ? hero.name : '';
         }).filter(name => name);
         
-        alert(`✅ 一键上阵完成！\n上阵武将：${heroNames.join('、')}`);
+        this.showModalBox('一键上阵', `✅ 一键上阵完成！\n上阵武将：${heroNames.join('、')}`, true, 2000);
     }
     
     renderDailyQuests() {
@@ -3117,12 +4809,12 @@ class Game {
         console.log(`  - 是否已领取：${this.player.dailyQuests[questId + '_claimed']}`);
         
         if (progress < quest.target) {
-            alert('❌ 任务未完成');
+            this.showToast('❌ 任务未完成');
             return;
         }
         
         if (this.player.dailyQuests[questId + '_claimed']) {
-            alert('❌ 奖励已领取');
+            this.showToast('❌ 奖励已领取');
             return;
         }
         
@@ -3145,7 +4837,7 @@ class Game {
             }
         }
         
-        alert(`✅ 领取奖励！\n💰 金币 +${quest.reward.gold}\n💎 元宝 +${quest.reward.gem}\n✨ 经验 +${quest.reward.exp}`);
+        this.showModalBox('领取奖励', `✅ 领取奖励！\n💰 金币 +${quest.reward.gold}\n💎 元宝 +${quest.reward.gem}\n✨ 经验 +${quest.reward.exp}`, true, 2000);
         this.saveGame();
         this.updateResourceDisplay();
         this.renderDailyQuests();
@@ -3180,7 +4872,7 @@ class Game {
         });
         
         if (claimedCount === 0) {
-            alert('⚠️ 没有可领取的奖励\n所有任务未完成或已领取');
+            this.showToast('⚠️ 没有可领取的奖励');
             return;
         }
         
