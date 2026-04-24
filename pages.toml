@@ -1,0 +1,13 @@
+# Cloudflare Pages 配置
+# 注意：这不是 Wrangler 配置，而是 Pages 的构建配置
+
+[build]
+# 构建命令 - 静态网站不需要
+command = "echo 'No build required'"
+
+# 构建输出目录 - 指定为当前目录
+publish = "."
+
+# 或者使用 wrangler.toml 用于 Pages
+[site]
+bucket = "."

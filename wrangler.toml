@@ -1,0 +1,17 @@
+# Cloudflare Pages 配置
+name = "c-game"
+compatibility_date = "2024-01-01"
+
+[build]
+# 不需要构建命令
+command = "echo 'Build complete'"
+
+# 指定静态文件目录
+[build.upload]
+# 使用静态文件模式
+format = "static"
+
+# 站点配置
+[site]
+# 当前目录包含所有静态文件
+bucket = "."
